@@ -2,13 +2,13 @@
   <main>
 
     <!-- ── Hero ─────────────────────────────────────────────────────────── -->
-    <section class="hero-section">
-      <div class="container mx-auto px-12 z-10 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+    <section class="hero-section flex align-items-center">
+      <div class="page-container grid align-items-center">
 
-        <div class="md:col-span-6">
+        <div class="col-12 md:col-6">
           <span class="eyebrow">Boutique de Selección</span>
           <h1 class="hero-title">
-            Curaduría <br/><span class="italic">con Alma.</span>
+            Curaduría <br /><span class="text-italic">con Alma.</span>
           </h1>
           <p class="hero-body">
             En La Última Botella no solo vendemos vino; recorremos las bodegas más exclusivas
@@ -16,18 +16,17 @@
           </p>
         </div>
 
-        <div class="md:col-span-6 relative">
-          <div class="aspect-[3/4] w-full bg-[#e4e4cc] overflow-hidden rounded-lg shadow-[0_20px_40px_-15px_rgba(27,29,14,0.06)] rotate-2">
+        <div class="col-12 md:col-6 relative">
+          <div class="hero-img-main border-round overflow-hidden shadow-4">
             <img
-              class="w-full h-full object-cover"
+              class="w-full h-full"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6lysfBeryigaP3EPQfLvg-Xxg_Hy50JofrdJVweT9lT05jrAYJ5yRUzMetBSvJh8RoZXsLLx2zyvgFfE-ItMUdfwvvUU_eRtHR0OvmibjNBzf14zmEaoFKtjqdtkTwtLuIsNAUDxwrIIGWr7nJZiae4oIPaX5L8nrR3IVkv44tv68iBGR8kIv_H-ZNh8mp0TAB1GMSaHvTqGi5KVfREGnhKTLhq8qorWJ_REpASgubzqjP98HbuwzjJbfVqFpfbrDuZE9rxpDIGLp"
               alt="Bodega con velas"
             />
           </div>
-          <div class="absolute -bottom-12 -left-12 aspect-square w-64 bg-[#2a0002] overflow-hidden
-                      rounded-lg shadow-xl -rotate-3 border-[12px] border-[#fbfbe2] hidden md:block">
+          <div class="hero-img-floating absolute border-round overflow-hidden shadow-5 hidden md:block">
             <img
-              class="w-full h-full object-cover opacity-90"
+              class="w-full h-full"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5tAWfmciXKBkJ_P_eEeW_dJ0lOkVbgG-VggXTjpU36EH4FjtsI-gcnvWWI0Q1B1z1oZ1sBgtU3FQMPae8-kfb58-wLWnP03YxuWFYBcG-_GeoMCQZ74q-sHhAUEUlKreWOjNGRldBvKLLaNuyOyToGGDIEJ6qJ8vFPXFYQOpfnjLBHDXMGS8dQzkiW-CnrM5gHSh66uMN3vBXuqFD3Tvf8Yg7mWGZis6P7GnaWfFFveBG3wSrqigEdCoL1RsU8Xg9F6OF_dW_9FoF"
               alt="Viñedos al amanecer"
             />
@@ -38,34 +37,46 @@
     </section>
 
     <!-- ── Filosofía ─────────────────────────────────────────────────────── -->
-    <section class="py-32 bg-[#fbfbe2]">
-      <div class="container mx-auto px-12">
-        <div class="max-w-4xl mx-auto text-center">
+    <section class="surface-section">
+      <div class="page-container">
+        <div class="philosophy-block mx-auto text-center">
           <h2 class="philosophy-quote">
             «No somos solo una tienda; somos el puente entre la bodega y tu copa.»
           </h2>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-16 text-left mt-24">
-            <div>
-              <h3 class="pillar-title">El Origen</h3>
-              <p class="pillar-body">
-                Cada etiqueta en nuestro catálogo ha sido seleccionada tras un riguroso proceso
-                de cata, asegurando autenticidad y excelencia desde su tierra natal.
-              </p>
+          <div class="grid mt-8">
+            <div class="col-12 md:col-4">
+              <Card class="pillar-card">
+                <template #title>El Origen</template>
+                <template #content>
+                  <p class="pillar-body">
+                    Cada etiqueta en nuestro catálogo ha sido seleccionada tras un riguroso proceso
+                    de cata, asegurando autenticidad y excelencia desde su tierra natal.
+                  </p>
+                </template>
+              </Card>
             </div>
-            <div>
-              <h3 class="pillar-title">La Excelencia</h3>
-              <p class="pillar-body">
-                Buscamos vinos que cuenten una historia. Desde pequeños productores independientes
-                hasta las casas más prestigiosas del viejo mundo.
-              </p>
+            <div class="col-12 md:col-4">
+              <Card class="pillar-card">
+                <template #title>La Excelencia</template>
+                <template #content>
+                  <p class="pillar-body">
+                    Buscamos vinos que cuenten una historia. Desde pequeños productores independientes
+                    hasta las casas más prestigiosas del viejo mundo.
+                  </p>
+                </template>
+              </Card>
             </div>
-            <div>
-              <h3 class="pillar-title">El Vínculo</h3>
-              <p class="pillar-body">
-                Nuestra misión es educar y conectar. Facilitamos el acceso a botellas que de otro
-                modo serían imposibles de encontrar en mercados convencionales.
-              </p>
+            <div class="col-12 md:col-4">
+              <Card class="pillar-card">
+                <template #title>El Vínculo</template>
+                <template #content>
+                  <p class="pillar-body">
+                    Nuestra misión es educar y conectar. Facilitamos el acceso a botellas que de otro
+                    modo serían imposibles de encontrar en mercados convencionales.
+                  </p>
+                </template>
+              </Card>
             </div>
           </div>
         </div>
@@ -73,67 +84,67 @@
     </section>
 
     <!-- ── Editorial Break ───────────────────────────────────────────────── -->
-    <section class="h-[614px] relative overflow-hidden">
+    <section class="editorial-section relative overflow-hidden">
       <img
-        class="w-full h-full object-cover"
+        class="w-full h-full"
         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSS9Sdznr_JJw2ixxvreypojY_DkH5T4vY0E7LtaCYr4mwJl3yc3sbCisne9GP4o6Nx4ODmXp04Arg2nLChC77I2fNmXn26BHrOxLYs6K_WMwVcx29-Fchzvq6u7q9AAWXtsvEVpJFjwI2zx-lyow6VjP09NHSOO0snbErzRGITnOKOkvb1xhOse2S41xyE1kQI01YBxVfy7JirjNelHTYvFGxTUF0HTteM7PZl2h0obXUFezahs3z7SYDwum0k487425aJQDesmG4"
         alt="Bodega al atardecer"
       />
-      <div class="absolute inset-0 bg-[#2a0002]/20 backdrop-brightness-75 flex items-center justify-center">
-        <h2 class="editorial-headline px-4 text-center">
+      <div class="editorial-overlay absolute top-0 left-0 w-full h-full flex align-items-center justify-content-center">
+        <h2 class="editorial-headline text-center px-3">
           Corazón Tradicional, Paladar Moderno.
         </h2>
       </div>
     </section>
 
-    <!-- ── Nuestra Misión ─────────────────────────────────────────────────── -->
-    <section class="py-32 bg-[#fbfbe2]">
-      <div class="container mx-auto px-12 grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+    <!-- ── Nuestra Misión ───────────────────────────────────────────────── -->
+    <section class="surface-section">
+      <div class="page-container grid align-items-center">
 
         <!-- Imagen -->
-        <div class="order-2 md:order-1 relative">
-          <div class="aspect-[4/5] bg-[#f5f5dc] rounded-lg overflow-hidden shadow-[0_20px_40px_-15px_rgba(27,29,14,0.06)]">
+        <div class="col-12 md:col-6 relative mb-6 md:mb-0">
+          <div class="mission-img border-round overflow-hidden shadow-4">
             <img
-              class="w-full h-full object-cover"
+              class="w-full h-full"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3r2h7XKPkrrSxHPKSoTGcWQwenUGmS2bug8H8hDelLMf1PVjYb6EXcARFsdl8i-1bLMoaXBBYUqBdhDSR43P7uSZUBDcjBgs8HfJD4MCRNVUyl1XBSqtMddGXu1GqZR-Trcp8cBheZX3kuFa71rozqQ3TtJSl04avpxPudrUbDl-0gtq5OvGCboIgf-o15qm-KaFBacrlNwslhfvdBNz-LUusgRkapyv_xykgu1SQB_PCWrO-NFTUhrkqW0sQQ6hFAiRI5_ICMz4Y"
               alt="Barricas de roble"
             />
           </div>
-          <div class="absolute -top-10 -right-10 bg-[#ffe088] p-8 rounded-lg shadow-xl hidden md:block">
-            <p class="font-['Noto_Serif'] text-2xl italic leading-snug">
-              "Selección artesanal, <br/>corazón volcado."
+          <div class="mission-card absolute border-round shadow-5 hidden md:block p-4">
+            <p class="mission-card-text">
+              "Selección artesanal, <br />corazón volcado."
             </p>
           </div>
         </div>
 
         <!-- Texto -->
-        <div class="order-1 md:order-2">
+        <div class="col-12 md:col-6">
           <span class="eyebrow">Nuestra Misión</span>
-          <h2 class="mission-title">Seleccionando lo <br/>Inalcanzable.</h2>
+          <h2 class="mission-title">Seleccionando lo <br />Inalcanzable.</h2>
           <p class="mission-body">
             La Última Botella no es solo un catálogo, es una curaduría personal. Seleccionamos
             tirajes limitados y joyas ocultas de bodegas familiares, asegurando que cada botella
             que llega a tus manos sea una pieza de colección.
           </p>
 
-          <div class="space-y-6 mb-12">
-            <div class="feature-row">
-              <span class="material-symbols-outlined text-[#735c00]">workspace_premium</span>
-              <span class="font-['Manrope'] font-medium">Autenticidad Garantizada</span>
+          <div class="flex flex-column gap-4 mb-6">
+            <div class="feature-row flex align-items-center gap-3">
+              <i class="pi pi-verified feature-icon"></i>
+              <span class="font-medium">Autenticidad Garantizada</span>
             </div>
-            <div class="feature-row">
-              <span class="material-symbols-outlined text-[#735c00]">inventory_2</span>
-              <span class="font-['Manrope'] font-medium">Almacenamiento en Cava Privada</span>
+            <div class="feature-row flex align-items-center gap-3">
+              <i class="pi pi-box feature-icon"></i>
+              <span class="font-medium">Almacenamiento en Cava Privada</span>
             </div>
-            <div class="feature-row">
-              <span class="material-symbols-outlined text-[#735c00]">local_shipping</span>
-              <span class="font-['Manrope'] font-medium">Logística de Guante Blanco</span>
+            <div class="feature-row flex align-items-center gap-3">
+              <i class="pi pi-truck feature-icon"></i>
+              <span class="font-medium">Logística de Guante Blanco</span>
             </div>
           </div>
 
-          <RouterLink to="/catalogo" class="btn-primary">
-            Ver Productos
-          </RouterLink>
+          <router-link to="/catalogo">
+            <Button label="Ver Productos" icon="pi pi-arrow-right" iconPos="right" class="btn-primary" />
+          </router-link>
         </div>
 
       </div>
@@ -144,17 +155,28 @@
 
 <script setup>
 // Página estática — sin llamadas a API
+import Button from 'primevue/button';
+import Card from 'primevue/card';
 </script>
 
 <style scoped>
+/* ── Tokens de marca (no cubiertos por PrimeFlex) ──────────────────────── */
+.page-container {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .page-container { padding-inline: 3rem; }
+}
+
 /* Hero */
 .hero-section {
   position: relative;
-  height: 921px;
-  display: flex;
-  align-items: center;
+  min-height: 80vh;
   overflow: hidden;
   background-color: #f5f5dc;
+  padding-block: 4rem;
 }
 
 .eyebrow {
@@ -177,6 +199,8 @@
   margin-left: -4px;
 }
 
+.text-italic { font-style: italic; }
+
 .hero-body {
   font-family: 'Manrope', sans-serif;
   font-size: 1.125rem;
@@ -185,7 +209,29 @@
   line-height: 1.7;
 }
 
+.hero-img-main {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  background-color: #e4e4cc;
+  transform: rotate(2deg);
+}
+
+.hero-img-floating {
+  aspect-ratio: 1 / 1;
+  width: 16rem;
+  bottom: -3rem;
+  left: -3rem;
+  background-color: #2a0002;
+  border: 12px solid #fbfbe2;
+  transform: rotate(-3deg);
+}
+.hero-img-floating img { opacity: 0.9; }
+
 /* Filosofía */
+.surface-section { padding-block: 8rem; background-color: #fbfbe2; }
+
+.philosophy-block { max-width: 56rem; }
+
 .philosophy-quote {
   font-family: 'Noto Serif', serif;
   font-size: 2.25rem;
@@ -194,13 +240,13 @@
   margin-bottom: 1.5rem;
 }
 
-.pillar-title {
+.pillar-card { background: transparent; box-shadow: none; text-align: left; }
+.pillar-card :deep(.p-card-title) {
   font-family: 'Noto Serif', serif;
   font-size: 1.25rem;
   color: #2a0002;
-  margin-bottom: 1rem;
 }
-
+.pillar-card :deep(.p-card-body) { padding: 0; }
 .pillar-body {
   font-family: 'Manrope', sans-serif;
   font-size: 0.875rem;
@@ -209,6 +255,11 @@
 }
 
 /* Editorial */
+.editorial-section { height: 614px; }
+.editorial-overlay {
+  background-color: rgba(42, 0, 2, 0.2);
+  backdrop-filter: brightness(75%);
+}
 .editorial-headline {
   font-family: 'Noto Serif', serif;
   color: white;
@@ -217,6 +268,25 @@
 }
 
 /* Misión */
+.mission-img {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  background-color: #f5f5dc;
+}
+
+.mission-card {
+  top: -2.5rem;
+  right: -2.5rem;
+  background-color: #ffe088;
+}
+.mission-card-text {
+  font-family: 'Noto Serif', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.3;
+  margin: 0;
+}
+
 .mission-title {
   font-family: 'Noto Serif', serif;
   font-size: 3rem;
@@ -234,29 +304,25 @@
 }
 
 .feature-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   border-bottom: 1px solid rgba(218, 193, 191, 0.2);
   padding-bottom: 1rem;
+  font-family: 'Manrope', sans-serif;
 }
+.feature-icon { color: #735c00; font-size: 1.25rem; }
 
-.btn-primary {
-  display: inline-block;
-  padding: 1.25rem 2.5rem;
+/* Botón principal: se reusa para cualquier <Button class="btn-primary"> */
+:deep(.btn-primary) {
   background-color: #2a0002;
-  color: white;
+  border-color: #2a0002;
   font-family: 'Manrope', sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-weight: 700;
+  padding: 1.25rem 2.5rem;
   border-radius: 6px;
-  text-decoration: none;
   box-shadow: 0 10px 20px rgba(42, 0, 2, 0.15);
-  transition: background-color 0.2s, transform 0.15s;
 }
-
-.btn-primary:hover  { background-color: #3d0003; }
-.btn-primary:active { transform: scale(0.95); }
+:deep(.btn-primary:hover) { background-color: #3d0003; border-color: #3d0003; }
+:deep(.btn-primary:active) { transform: scale(0.95); }
 </style>
