@@ -3,14 +3,14 @@
     <header class="index-header">
       <div class="header-info">
         <h1>Casas y Bodegas</h1>
-        <p>Gestiona los productores y casas vinicolas que dan vida a la coleccion.</p>
+        <p>Gestiona los productores y casas vinícolas que dan vida a la colección.</p>
       </div>
       <router-link :to="{ name: 'admin.marcas.create' }" custom v-slot="{ navigate }">
-        <Button label="Nueva Bodega" icon="pi pi-plus" @click="navigate" />
+        <Button label="Nueva Bodega" icon="pi pi-plus" @click="navigate" style="background-color: var(--primary);border: none;"/>
       </router-link>
     </header>
 
-    <Card class="admin-card mb-4">
+    <Card class="admin-card mb-4 bg-transparent">
       <template #content>
         <div class="flex flex-column md:flex-row gap-3 md:align-items-center">
           <IconField class="flex-1">
@@ -34,7 +34,7 @@
       <Column header="Bodega y Origen">
         <template #body="{ data: item }">
           <div class="flex flex-column gap-1">
-            <span class="font-bold text-primary">{{ item.nombre }}</span>
+            <span class="font-bold product-name">{{ item.nombre }}</span>
             <span class="text-sm text-600">{{ item.pais || 'N/A' }} - {{ item.descripcion || 'Sin descripcion' }}</span>
           </div>
         </template>

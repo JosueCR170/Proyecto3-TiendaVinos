@@ -20,7 +20,7 @@
 
     <div v-else class="grid">
       <div v-for="item in statItems" :key="item.label" class="col-12 md:col-6 xl:col-4">
-        <Card class="admin-stat-card h-full">
+        <Card class="admin-stat-card h-full bg-transparent">
           <template #content>
             <div class="flex align-items-center gap-4">
               <div class="admin-stat-icon" :class="item.class">
@@ -49,10 +49,10 @@ const error = ref(null)
 const statItems = computed(() => [
   { label: 'Total Productos', value: stats.value.total_productos, icon: 'pi pi-box', class: 'wine' },
   { label: 'Productos Activos', value: stats.value.productos_activos, icon: 'pi pi-check-circle', class: 'sage' },
-  { label: 'Sin Stock', value: stats.value.productos_sin_stock, icon: 'pi pi-exclamation-triangle', class: 'danger' },
+  { label: 'Sin Stock (Agotados)', value: stats.value.productos_sin_stock, icon: 'pi pi-exclamation-triangle', class: 'danger' },
   { label: 'En Oferta', value: stats.value.con_descuento, icon: 'pi pi-tag', class: 'gold' },
-  { label: 'Categorias', value: stats.value.total_categorias, icon: 'pi pi-folder', class: 'wine' },
-  { label: 'Marcas / Bodegas', value: stats.value.total_marcas, icon: 'pi pi-building', class: 'sage' },
+  { label: 'Categorias', value: stats.value.total_categorias, icon: 'pi pi-objects-column', class: 'wine' },
+  { label: 'Marcas / Bodegas', value: stats.value.total_marcas, icon: 'pi pi-shop', class: 'sage' },
   { label: 'Variedades', value: stats.value.total_variedades, icon: 'pi pi-sparkles', class: 'gold' },
 ])
 

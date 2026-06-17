@@ -3,14 +3,14 @@
     <header class="index-header">
       <div class="header-info">
         <h1>Arquitectura de Coleccion</h1>
-        <p>Gestiona las categorias editoriales que estructuran la cava digital.</p>
+        <p>Gestiona las categorías editoriales que estructuran la cava digital.</p>
       </div>
       <router-link :to="{ name: 'admin.categorias.create' }" custom v-slot="{ navigate }">
-        <Button label="Nueva Categoria Principal" icon="pi pi-plus" @click="navigate" />
+        <Button label="Nueva Categoria Principal" icon="pi pi-plus" @click="navigate" style="background-color: var(--primary);border: none;"/>
       </router-link>
     </header>
 
-    <Card class="admin-card mb-4">
+    <Card class="admin-card mb-4 bg-transparent">
       <template #content>
         <div class="flex flex-column md:flex-row gap-3 md:align-items-center">
           <IconField class="flex-1">
@@ -30,8 +30,8 @@
       <Column header="Estructura de Categoria">
         <template #body="{ data: cat }">
           <div class="flex align-items-center gap-3" :style="{ paddingLeft: cat.nivel > 1 ? '2rem' : '0' }">
-            <i :class="cat.nivel === 1 ? 'pi pi-folder text-primary' : 'pi pi-angle-right text-500'"></i>
-            <span class="font-bold text-primary">{{ cat.nombre }}</span>
+            <i :class="cat.nivel === 1 ? 'pi pi-folder' : 'pi pi-angle-right text-500'"></i>
+            <span class="font-bold product-name">{{ cat.nombre }}</span>
           </div>
         </template>
       </Column>

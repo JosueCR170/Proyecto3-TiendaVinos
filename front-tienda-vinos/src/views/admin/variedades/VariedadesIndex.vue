@@ -3,14 +3,14 @@
     <header class="index-header">
       <div class="header-info">
         <h1>Variedades de Uva</h1>
-        <p>Gestiona las cepas y variedades que definen el caracter de cada botella.</p>
+        <p>Gestiona las cepas y variedades que definen el carácter de cada botella.</p>
       </div>
       <router-link :to="{ name: 'admin.variedades.create' }" custom v-slot="{ navigate }">
-        <Button label="Nueva Variedad" icon="pi pi-plus" @click="navigate" />
+        <Button label="Nueva Variedad" icon="pi pi-plus" @click="navigate" style="background-color: var(--primary);border: none;"/>
       </router-link>
     </header>
 
-    <Card class="admin-card mb-4">
+    <Card class="admin-card mb-4 bg-transparent">
       <template #content>
         <div class="flex flex-column md:flex-row gap-3 md:align-items-center">
           <IconField class="flex-1">
@@ -30,7 +30,7 @@
       <Column header="Variedad">
         <template #body="{ data: item }">
           <div class="flex flex-column gap-1">
-            <span class="font-bold text-primary">{{ item.nombre }}</span>
+            <span class="font-bold product-name">{{ item.nombre }}</span>
             <span class="text-sm text-600">Variedad de tipo {{ item.tipo || 'N/A' }}</span>
           </div>
         </template>

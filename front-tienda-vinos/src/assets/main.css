@@ -1195,10 +1195,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 
 /* componentes primeVue */
-/* .admin-card :deep(.p-card) {
-  background: transparent;
-  box-shadow: none;
-} */
 
 .admin-table,
 .admin-table .p-datatable,
@@ -1246,4 +1242,28 @@ input:checked + .slider:before { transform: translateX(20px); }
 /* Quitar separación entre filas */
 .admin-table .p-datatable-tbody > tr {
     border: none !important;
+}
+
+.pagination-controls .p-button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.pagination-controls .p-button:hover:not(:disabled) {
+      background-color: var(--surface-container-highest) !important;
+      color: var(--primary) !important;
+}
+
+.pagination-controls .p-button-secondary:not(.p-button-outlined) {
+    background-color: var(--surface-container-highest) !important;
+    color: var(--primary) !important;
+}
+
+.pagination-controls .p-button-secondary:not(.p-button-outlined):hover {
+    background-color: var(--surface-container-highest) !important;
+}
+
+.pagination-controls .p-button:disabled {
+    opacity: 0.4;
 }

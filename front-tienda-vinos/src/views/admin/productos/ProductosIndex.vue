@@ -3,10 +3,10 @@
     <header class="index-header">
       <div class="header-info">
         <h1>Inventario de Productos</h1>
-        <p>Gestiona la seleccion editorial de licores finos y vinos de cosecha.</p>
+        <p>Gestiona la selección editorial de licores finos y vinos de cosecha.</p>
       </div>
       <router-link :to="{ name: 'admin.productos.create' }" custom v-slot="{ navigate }">
-        <Button label="Nuevo Producto" icon="pi pi-plus" @click="navigate" />
+        <Button label="Nuevo Producto" icon="pi pi-plus" @click="navigate" style="background-color: var(--primary);border: none;"/>
       </router-link>
     </header>
 
@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-2 justify-content-end">
-          <Button label="Filtrar" icon="pi pi-filter" @click="applyFilters" />
+          <Button label="Filtrar" icon="pi pi-filter" @click="applyFilters" outlined style="color:var(--primary);border: 1px solid var(--primary);"/>
           <Button v-if="hasActiveFilters" label="Limpiar filtros" icon="pi pi-filter-slash" severity="secondary" outlined @click="clearFilters" />
         </div>
       </template>
@@ -57,7 +57,7 @@
               <i v-else class="pi pi-image text-400"></i>
             </div>
             <div class="flex flex-column gap-1">
-              <span class="font-bold text-primary">{{ producto.nombre }}</span>
+              <span class="font-bold product-name">{{ producto.nombre }}</span>
               <span class="text-xs text-600">{{ producto.pais ?? 'N/A' }} - {{ producto.contenido_ml ? producto.contenido_ml + 'ml' : 'N/A' }}</span>
             </div>
           </div>
@@ -93,7 +93,7 @@
           <Button label="Precio" :icon="sortPrimeIcon('precio')" severity="secondary" text @click="toggleSort('precio')" />
         </template>
         <template #body="{ data: producto }">
-          <span class="font-bold text-primary">{{ formatPrice(producto.precio) }}</span>
+          <span class="font-bold price-text">{{ formatPrice(producto.precio) }}</span>
         </template>
       </Column>
 
@@ -118,7 +118,7 @@
       </Column>
     </DataTable>
 
-    <div v-if="pagination.total > 0" class="flex flex-column md:flex-row md:align-items-center justify-content-between gap-3 mt-4">
+    <div v-if="pagination.total > 0" class="flex flex-column md:flex-row md:align-items-center justify-content-between gap-3 mt-4 pagination-controls">
       <span class="text-sm text-600">
         Mostrando <strong>{{ pagination.from ?? 0 }}</strong> a <strong>{{ pagination.to ?? 0 }}</strong> de <strong>{{ pagination.total }}</strong> productos
       </span>
