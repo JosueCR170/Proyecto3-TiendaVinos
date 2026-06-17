@@ -1,99 +1,57 @@
 <template>
   <div class="create-view-wrapper">
-    <div v-if="initialLoading" style="display:flex;justify-content:center;padding:80px 0;">
-      <span class="material-symbols-outlined" style="font-size:48px;color:var(--tertiary);animation:spin 1s linear infinite;">progress_activity</span>
+    <div v-if="initialLoading" class="admin-loading">
+      <ProgressSpinner />
     </div>
 
     <form v-else @submit.prevent="submitForm">
-
       <header class="header-section">
         <div class="header-text">
           <h1>Editar Categoría Editorial</h1>
           <p>Ajusta la definición y posición jerárquica de esta categoría.</p>
         </div>
         <div class="header-actions">
-          <router-link :to="{ name: 'admin.categorias.index' }" class="btn-discard">Descartar</router-link>
-          <button type="submit" class="btn-save" :disabled="loading">
-            {{ loading ? 'Actualizando...' : 'Actualizar Categoría' }}
-          </button>
+          <router-link :to="{ name: 'admin.categorias.index' }" custom v-slot="{ navigate }">
+            <Button label="Descartar" severity="secondary" outlined @click="navigate" />
+          </router-link>
+          <Button type="submit" label="Actualizar Categoría" :loading="loading" style="background-color: var(--primary);border: none;" />
         </div>
       </header>
 
-      <div v-if="error" class="alert-premium error" style="margin-bottom:32px;">
-        <span class="material-symbols-outlined alert-icon">error</span>
-        <div class="alert-content">
-          <span class="alert-title">Error</span>
-          <p class="alert-message">{{ error }}</p>
+      <Message v-if="error" severity="error" class="mb-4">{{ error }}</Message>
+
+      <div class="grid">
+        <div class="col-12 lg:col-8">
+          <Card class="admin-card mb-4 bg-transparent">
+            <template #title>Identidad de la Categoría</template>
+            <template #content>
+              <div class="grid formgrid">
+                <div class="field col-12 md:col-6">
+                  <label for="nombre" class="admin-label">Nombre de la Categoría</label>
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Tintos de Guarda" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="nivel_display" class="admin-label">Nivel Jerárquico</label>
+                  <Select v-model="form.nivel" id="nivel_display" :options="nivelOptions" optionLabel="label" optionValue="value" class="w-full" disabled style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                </div>
+                <div class="field col-12">
+                  <label for="nombre_padre" class="admin-label">Categoría Padre</label>
+                  <InputText v-if="form.nivel === 1" modelValue="Ninguna (Raiz)" class="w-full" disabled style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                  <Select v-else v-model="form.nombre_padre" id="nombre_padre" :options="categoriasPrincipales" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccione una categoria superior" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                </div>
+              </div>
+            </template>
+          </Card>
+
+          <Card class="admin-card bg-transparent">
+            <template #title>Descripción Editorial</template>
+            <template #content>
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Define el propósito y carácter de esta categoría..." style="border: none;background-color: var(--surface-container-low);border-radius: 12px;"/>
+            </template>
+          </Card>
         </div>
+
       </div>
-
-      <div class="main-grid">
-        <div class="form-column">
-
-          <!-- Section 01 -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">01</span>
-              <h2>Identidad de la Categoría</h2>
-            </div>
-            <div class="input-grid">
-              <div class="form-group">
-                <label for="nombre">Nombre de la Categoría</label>
-                <input v-model="form.nombre" type="text" id="nombre" placeholder="ej. Tintos de Guarda" required>
-              </div>
-              <div class="form-group">
-                <label for="nivel_display">Nivel Jerárquico</label>
-                <select id="nivel_display" class="premium-select" disabled>
-                  <option :value="1" :selected="form.nivel === 1">Nivel 1 (Principal)</option>
-                  <option :value="2" :selected="form.nivel === 2">Nivel 2 (Subcategoría)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="nombre_padre">Categoría Padre (Si aplica)</label>
-                <template v-if="form.nivel === 1">
-                  <select class="premium-select" disabled>
-                    <option value="">Ninguna (Raíz)</option>
-                  </select>
-                </template>
-                <template v-else>
-                  <select v-model="form.nombre_padre" id="nombre_padre" class="premium-select" required>
-                    <option value="" disabled>Seleccione una categoría superior</option>
-                    <option v-for="cat in categoriasPrincipales" :key="cat.id_categoria" :value="cat.id_categoria">
-                      {{ cat.nombre }}
-                    </option>
-                  </select>
-                </template>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 02 -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">02</span>
-              <h2>Descripción Editorial</h2>
-            </div>
-            <div class="note-area">
-              <textarea v-model="form.descripcion" id="descripcion" rows="6" placeholder="Define el propósito y carácter de esta categoría..."></textarea>
-              <div class="note-badge">Voz de Cava</div>
-            </div>
-          </section>
-
-        </div>
-
-        <div class="visual-column">
-          <div class="curator-tip">
-            <div class="tip-header">
-              <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
-              Estructura de Bodega
-            </div>
-            <p class="tip-text">
-              "Al editar, considere que los cambios en el nombre pueden afectar la navegación del usuario si ya está familiarizado con la estructura actual."
-            </p>
-          </div>
-        </div>
-      </div>
-
     </form>
   </div>
 </template>
@@ -113,6 +71,10 @@ const loading = ref(false)
 const initialLoading = ref(true)
 const error = ref(null)
 const todasCategorias = ref([])
+const nivelOptions = [
+  { label: 'Nivel 1 (Principal)', value: 1 },
+  { label: 'Nivel 2 (Subcategoria)', value: 2 }
+]
 
 const form = reactive({
   nombre: '',
@@ -138,10 +100,10 @@ async function fetchData() {
       form.nombre_padre = cat.nombre_padre || ''
       form.descripcion = cat.descripcion || ''
     } else {
-      error.value = 'No se encontró la categoría solicitada.'
+      error.value = 'No se encontro la categoria solicitada.'
     }
   } catch (err) {
-    error.value = 'Error al cargar los datos de la categoría.'
+    error.value = 'Error al cargar los datos de la categoria.'
     console.error(err)
   } finally {
     initialLoading.value = false
@@ -156,12 +118,12 @@ async function submitForm() {
     if (payload.nivel === 1) payload.nombre_padre = null
     const result = await CategoriaController.actualizarCategoria(id, payload)
     if (!result.success) throw result
-    notif.show('Categoría actualizada exitosamente.')
+    notif.show('Categoria actualizada exitosamente.')
     router.push({ name: 'admin.categorias.index' })
   } catch (err) {
     error.value = err.status === 422
-      ? err.message || 'Datos inválidos. Verifica el formulario.'
-      : 'Ocurrió un error inesperado al actualizar la categoría.'
+      ? err.message || 'Datos invalidos. Verifica el formulario.'
+      : 'Ocurrio un error inesperado al actualizar la categoria.'
   } finally {
     loading.value = false
   }
@@ -169,10 +131,3 @@ async function submitForm() {
 
 onMounted(fetchData)
 </script>
-
-<style scoped>
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-</style>

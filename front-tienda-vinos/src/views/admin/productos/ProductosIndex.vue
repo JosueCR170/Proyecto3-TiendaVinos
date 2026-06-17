@@ -1,325 +1,146 @@
-<!-- resources/js/views/admin/productos/ProductosIndex.vue -->
-
 <template>
   <div class="index-view">
-    <!-- ── Header ─────────────────────────────────────────────────────────── -->
     <header class="index-header">
       <div class="header-info">
         <h1>Inventario de Productos</h1>
         <p>Gestiona la selección editorial de licores finos y vinos de cosecha.</p>
       </div>
-      <div class="header-actions">
-        <router-link :to="{ name: 'admin.productos.create' }" class="btn-create">
-          <span class="material-symbols-outlined">add</span>
-          <span>Nuevo Producto</span>
-        </router-link>
-      </div>
+      <router-link :to="{ name: 'admin.productos.create' }" custom v-slot="{ navigate }">
+        <Button label="Nuevo Producto" icon="pi pi-plus" @click="navigate" style="background-color: var(--primary);border: none;"/>
+      </router-link>
     </header>
 
-    <!-- ── Barra de filtros ───────────────────────────────────────────────── -->
-    <div class="filter-bar">
-      <div class="filter-group">
-        <span class="material-symbols-outlined filter-icon">search</span>
-        <input
-          v-model="filters.search"
-          type="text"
-          class="filter-input"
-          placeholder="Buscar por nombre o descripción..."
-          @keyup.enter="applyFilters"
-        />
-      </div>
-
-      <div class="filter-group">
-        <select v-model="filters.categoria" class="premium-select">
-          <option value="">Todas las Categorías</option>
-          <option
-            v-for="categoria in categorias"
-            :key="categoria.id_categoria"
-            :value="categoria.id_categoria"
-          >
-            {{ categoria.nombre }}
-          </option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <select v-model="filters.marca" class="premium-select">
-          <option value="">Todas las Marcas</option>
-          <option
-            v-for="marca in marcas"
-            :key="marca.id_marca"
-            :value="marca.id_marca"
-          >
-            {{ marca.nombre }}
-          </option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <input
-          v-model="filters.pais"
-          list="paises-list"
-          class="premium-datalist-input"
-          placeholder="Buscar por país..."
-        />
-        <datalist id="paises-list">
-          <option v-for="(nombre, code) in paises" :key="code" :value="nombre" />
-        </datalist>
-      </div>
-
-      <button class="btn-filter" @click="applyFilters">Filtrar</button>
-
-      <button
-        v-if="hasActiveFilters"
-        class="btn-reset"
-        @click="clearFilters"
-      >
-        Limpiar Filtros
-      </button>
-    </div>
-
-    <!-- ── Tabla ──────────────────────────────────────────────────────────── -->
-    <div class="table-wrapper">
-
-      <!-- Estado de carga -->
-      <div v-if="loading" class="loading-state">
-        <span class="material-symbols-outlined spinning">progress_activity</span>
-        <span>Cargando productos...</span>
-      </div>
-
-      <!-- Error de carga -->
-      <div v-else-if="error" class="error-state">
-        <span class="material-symbols-outlined">error</span>
-        <span>{{ error }}</span>
-        <button class="btn-filter" @click="fetchProductos">Reintentar</button>
-      </div>
-
-      <table v-else class="premium-table">
-        <thead>
-          <tr>
-            <th>
-              <button class="sort-link" @click="toggleSort('nombre')">
-                Producto
-                <span class="material-symbols-outlined sort-icon" :class="{ active: sort.field === 'nombre' }">
-                  {{ sortIcon('nombre') }}
-                </span>
-              </button>
-            </th>
-            <th>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <button class="sort-link" @click="toggleSort('categoria')">
-                  Categoría
-                  <span class="material-symbols-outlined sort-icon" :class="{ active: sort.field === 'categoria' }">
-                    {{ sortIcon('categoria') }}
-                  </span>
-                </button>
-                <span style="opacity: 0.3;">/</span>
-                <button class="sort-link" @click="toggleSort('marca')">
-                  Marca
-                  <span class="material-symbols-outlined sort-icon" :class="{ active: sort.field === 'marca' }">
-                    {{ sortIcon('marca') }}
-                  </span>
-                </button>
-              </div>
-            </th>
-            <th>
-              <button class="sort-link" @click="toggleSort('cantidad')">
-                Stock
-                <span class="material-symbols-outlined sort-icon" :class="{ active: sort.field === 'cantidad' }">
-                  {{ sortIcon('cantidad') }}
-                </span>
-              </button>
-            </th>
-            <th>
-              <button class="sort-link" @click="toggleSort('precio')">
-                Precio
-                <span class="material-symbols-outlined sort-icon" :class="{ active: sort.field === 'precio' }">
-                  {{ sortIcon('precio') }}
-                </span>
-              </button>
-            </th>
-            <th>
-              <button class="sort-link" @click="toggleSort('estado')">
-                Estado
-                <span class="material-symbols-outlined sort-icon" :class="{ active: sort.field === 'estado' }">
-                  {{ sortIcon('estado') }}
-                </span>
-              </button>
-            </th>
-            <th class="actions-cell">Acciones</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <!-- Filas de productos -->
-          <tr v-for="producto in productos" :key="producto.id_producto">
-            <td>
-              <div class="product-cell">
-                <div class="product-img-wrapper">
-                  <img
-                    v-if="producto.imagen_url"
-                    :src="producto.imagen_url"
-                    :alt="producto.nombre"
-                  />
-                  <span v-else class="material-symbols-outlined" style="opacity: 0.3;">wine_bar</span>
-                </div>
-                <div class="product-name-info">
-                  <span class="product-name">{{ producto.nombre }}</span>
-                  <span class="product-meta">
-                    {{ producto.pais ?? 'N/A' }} • {{ producto.contenido_ml ? producto.contenido_ml + 'ml' : 'N/A' }}
-                  </span>
-                </div>
-              </div>
-            </td>
-
-            <td>
-              <div class="category-cell">
-                <span class="category-name">
-                  <small
-                    v-if="producto.categoria?.padre"
-                    style="opacity: 0.5; font-size: 0.7rem; display: block;"
-                  >
-                    {{ producto.categoria.padre.nombre }}
-                  </small>
-                  {{ producto.categoria?.nombre ?? 'Sin Categoría' }}
-                </span>
-                <span class="brand-name-sm">
-                  {{ producto.marca?.nombre ?? 'Sin Marca' }}
-                </span>
-              </div>
-            </td>
-
-            <td>
-              <span
-                class="stock-count"
-                :class="producto.cantidad <= 10 ? 'stock-low' : 'stock-normal'"
-              >
-                {{ producto.cantidad }} Unidades
-              </span>
-            </td>
-
-            <td>
-              <span class="price-text">{{ formatPrice(producto.precio) }}</span>
-            </td>
-
-            <td>
-              <span class="badge" :class="producto.estado ? 'badge-success' : 'badge-error'">
-                {{ producto.estado ? 'Activo' : 'Inactivo' }}
-              </span>
-            </td>
-
-            <td class="actions-cell">
-              <div class="actions-wrapper">
-                <router-link
-                  :to="{ name: 'admin.productos.edit', params: { id: producto.id_producto } }"
-                  class="action-btn"
-                  title="Editar"
-                >
-                  <span class="material-symbols-outlined">edit</span>
-                </router-link>
-
-                <button
-                  class="action-btn delete"
-                  title="Eliminar"
-                  @click="openDeleteModal(producto)"
-                >
-                  <span class="material-symbols-outlined">delete</span>
-                </button>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Estado vacío -->
-          <tr v-if="productos.length === 0">
-            <td colspan="6" style="text-align: center; padding: 3rem; color: rgba(27, 29, 14, 0.4);">
-              No se encontraron productos que coincidan con los criterios.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ── Paginación ─────────────────────────────────────────────────────── -->
-    <div v-if="pagination.total > 0" class="pagination-container">
-      <div class="pagination-info">
-        Mostrando
-        <strong>{{ pagination.from ?? 0 }}</strong> a
-        <strong>{{ pagination.to ?? 0 }}</strong> de
-        <strong>{{ pagination.total }}</strong> productos
-      </div>
-
-      <div class="pagination-controls">
-        <!-- Anterior -->
-        <button
-          class="page-link page-icon"
-          :class="{ 'page-disabled': pagination.currentPage === 1 }"
-          :disabled="pagination.currentPage === 1"
-          @click="goToPage(pagination.currentPage - 1)"
-        >
-          <span class="material-symbols-outlined">chevron_left</span>
-        </button>
-
-        <!-- Páginas visibles -->
-        <template v-for="page in visiblePages" :key="page">
-          <span v-if="page === pagination.currentPage" class="page-current">
-            {{ page }}
-          </span>
-          <button v-else class="page-link" @click="goToPage(page)">
-            {{ page }}
-          </button>
-        </template>
-
-        <!-- Siguiente -->
-        <button
-          class="page-link page-icon"
-          :class="{ 'page-disabled': pagination.currentPage === pagination.lastPage }"
-          :disabled="pagination.currentPage === pagination.lastPage"
-          @click="goToPage(pagination.currentPage + 1)"
-        >
-          <span class="material-symbols-outlined">chevron_right</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ── Modal de eliminación ───────────────────────────────────────────── -->
-    <Teleport to="body">
-      <div
-        v-if="deleteModal.visible"
-        class="modal-overlay"
-        @click.self="closeDeleteModal"
-      >
-        <div class="modal-content">
-          <div class="modal-header-icon">
-            <span class="material-symbols-outlined">warning</span>
+    <Card class="admin-card mb-4 bg-transparent">
+      <template #content>
+        <div class="grid formgrid">
+          <div class="field col-12 md:col-6 lg:col-3">
+            <IconField>
+              <InputIcon class="pi pi-search" />
+              <InputText v-model="filters.search" class="w-full" placeholder="Buscar producto..." @keyup.enter="applyFilters" />
+            </IconField>
           </div>
-          <h2>¿Eliminar Producto?</h2>
-          <p>
-            Estás a punto de eliminar
-            <strong>{{ deleteModal.producto?.nombre }}</strong>
-            de la colección.
-          </p>
-          <div class="modal-warning">
-            <span class="material-symbols-outlined" style="font-size: 16px;">info</span>
-            <span>
-              Esta acción es irreversible. Se eliminarán permanentemente todos los
-              datos técnicos y notas de cata asociados.
-            </span>
+          <div class="field col-12 md:col-6 lg:col-3">
+            <Select v-model="filters.categoria" :options="categoriaOptions" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Todas las categorías" />
           </div>
-          <div class="modal-actions">
-            <button class="btn-modal-cancel" @click="closeDeleteModal">
-              Mantener en Cava
-            </button>
-            <button
-              class="btn-modal-confirm"
-              :disabled="deleteModal.loading"
-              @click="confirmDelete"
-            >
-              {{ deleteModal.loading ? 'Eliminando...' : 'Eliminar Permanentemente' }}
-            </button>
+          <div class="field col-12 md:col-6 lg:col-3">
+            <Select v-model="filters.marca" :options="marcaOptions" optionLabel="nombre" optionValue="id_marca" class="w-full" placeholder="Todas las marcas" />
+          </div>
+          <div class="field col-12 md:col-6 lg:col-3">
+            <Select v-model="filters.pais" :options="paisOptions" class="w-full" placeholder="Todos los países" filter />
           </div>
         </div>
+        <div class="flex flex-wrap gap-2 justify-content-end">
+          <Button label="Filtrar" icon="pi pi-filter" @click="applyFilters" outlined style="color:var(--primary);border: 1px solid var(--primary);"/>
+          <Button v-if="hasActiveFilters" label="Limpiar filtros" icon="pi pi-filter-slash" severity="secondary" outlined @click="clearFilters" />
+        </div>
+      </template>
+    </Card>
+
+    <Message v-if="error" severity="error" class="mb-4">
+      <div class="flex align-items-center justify-content-between gap-3">
+        <span>{{ error }}</span>
+        <Button label="Reintentar" severity="danger" size="small" outlined @click="fetchProductos" />
       </div>
-    </Teleport>
+    </Message>
+
+    <DataTable v-else :value="productos" :loading="loading" dataKey="id_producto" class="admin-table " stripedRows>
+      <template #empty>No se encontraron productos que coincidan con los criterios.</template>
+
+      <Column>
+        <template #header>
+          <Button :label="`Producto`" :icon="sortPrimeIcon('nombre')" severity="secondary" text @click="toggleSort('nombre')" />
+        </template>
+        <template #body="{ data: producto }">
+          <div class="flex align-items-center gap-3">
+            <div class="admin-thumb">
+              <img v-if="producto.imagen_url" :src="producto.imagen_url" :alt="producto.nombre">
+              <i v-else class="pi pi-image text-400"></i>
+            </div>
+            <div class="flex flex-column gap-1">
+              <span class="font-bold product-name">{{ producto.nombre }}</span>
+              <span class="text-xs text-600">{{ producto.pais ?? 'N/A' }} - {{ producto.contenido_ml ? producto.contenido_ml + 'ml' : 'N/A' }}</span>
+            </div>
+          </div>
+        </template>
+      </Column>
+
+      <Column>
+        <template #header>
+          <div class="flex align-items-center gap-1">
+            <Button label="Categoría" :icon="sortPrimeIcon('categoria')" severity="secondary" text @click="toggleSort('categoria')" />
+            <Button label="Marca" :icon="sortPrimeIcon('marca')" severity="secondary" text @click="toggleSort('marca')" />
+          </div>
+        </template>
+        <template #body="{ data: producto }">
+          <div class="flex flex-column gap-1">
+            <span class="font-medium">{{ producto.categoria?.nombre ?? 'Sin Categoria' }}</span>
+            <span class="text-xs text-600">{{ producto.marca?.nombre ?? 'Sin Marca' }}</span>
+          </div>
+        </template>
+      </Column>
+
+      <Column>
+        <template #header>
+          <Button label="Stock" :icon="sortPrimeIcon('cantidad')" severity="secondary" text @click="toggleSort('cantidad')" />
+        </template>
+        <template #body="{ data: producto }">
+          <Tag :value="`${producto.cantidad} Unidades`" :severity="producto.cantidad <= 10 ? 'danger' : 'success'" />
+        </template>
+      </Column>
+
+      <Column>
+        <template #header>
+          <Button label="Precio" :icon="sortPrimeIcon('precio')" severity="secondary" text @click="toggleSort('precio')" />
+        </template>
+        <template #body="{ data: producto }">
+          <span class="font-bold price-text">{{ formatPrice(producto.precio) }}</span>
+        </template>
+      </Column>
+
+      <Column>
+        <template #header>
+          <Button label="Estado" :icon="sortPrimeIcon('estado')" severity="secondary" text @click="toggleSort('estado')" />
+        </template>
+        <template #body="{ data: producto }">
+          <Tag :value="producto.estado ? 'Activo' : 'Inactivo'" :severity="producto.estado ? 'success' : 'danger'" />
+        </template>
+      </Column>
+
+      <Column header="Acciones" bodyClass="text-right">
+        <template #body="{ data: producto }">
+          <div class="flex justify-content-end gap-2">
+            <router-link :to="{ name: 'admin.productos.edit', params: { id: producto.id_producto } }" custom v-slot="{ navigate }">
+              <Button icon="pi pi-pencil" severity="secondary" text rounded aria-label="Editar" @click="navigate" />
+            </router-link>
+            <Button icon="pi pi-trash" severity="danger" text rounded aria-label="Eliminar" @click="openDeleteModal(producto)" />
+          </div>
+        </template>
+      </Column>
+    </DataTable>
+
+    <div v-if="pagination.total > 0" class="flex flex-column md:flex-row md:align-items-center justify-content-between gap-3 mt-4 pagination-controls">
+      <span class="text-sm text-600">
+        Mostrando <strong>{{ pagination.from ?? 0 }}</strong> a <strong>{{ pagination.to ?? 0 }}</strong> de <strong>{{ pagination.total }}</strong> productos
+      </span>
+      <div class="flex gap-2 justify-content-end">
+        <Button icon="pi pi-chevron-left" severity="secondary" outlined :disabled="pagination.currentPage === 1" @click="goToPage(pagination.currentPage - 1)" />
+        <Button v-for="page in visiblePages" :key="page" :label="String(page)" :outlined="page !== pagination.currentPage" severity="secondary" @click="goToPage(page)" />
+        <Button icon="pi pi-chevron-right" severity="secondary" outlined :disabled="pagination.currentPage === pagination.lastPage" @click="goToPage(pagination.currentPage + 1)" />
+      </div>
+    </div>
+
+    <Dialog v-model:visible="deleteModal.visible" modal header="Eliminar Producto" :style="{ width: '34rem' }">
+      <p class="mb-3">
+        Estas a punto de eliminar <strong>{{ deleteModal.producto?.nombre }}</strong> de la coleccion.
+      </p>
+      <Message severity="warn">
+        Esta accion es irreversible. Se eliminaran permanentemente todos los datos tecnicos y notas de cata asociados.
+      </Message>
+      <template #footer>
+        <Button label="Mantener en Cava" severity="secondary" outlined :disabled="deleteModal.loading" @click="closeDeleteModal" />
+        <Button label="Eliminar Permanentemente" severity="danger" :loading="deleteModal.loading" @click="confirmDelete" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -332,8 +153,6 @@ import { useNotificationStore } from '@/stores/notifications'
 const route  = useRoute()
 const router = useRouter()
 const notif  = useNotificationStore()
-
-// ── Estado ────────────────────────────────────────────────────────────────────
 
 const productos  = ref([])
 const categorias = ref([])
@@ -355,7 +174,6 @@ const sort = reactive({
   direction: 'desc',
 })
 
-// Inicializar filtros desde la query string de la URL
 const filters = reactive({
   search:    route.query.search    ?? '',
   categoria: route.query.categoria ?? '',
@@ -369,11 +187,21 @@ const deleteModal = reactive({
   loading:  false,
 })
 
-// ── Computed ──────────────────────────────────────────────────────────────────
-
 const hasActiveFilters = computed(() =>
   Object.values(filters).some(v => v !== '')
 )
+
+const categoriaOptions = computed(() => [
+  { id_categoria: '', nombre: 'Todas las categorias' },
+  ...categorias.value,
+])
+
+const marcaOptions = computed(() => [
+  { id_marca: '', nombre: 'Todas las marcas' },
+  ...marcas.value,
+])
+
+const paisOptions = computed(() => ['', ...Object.values(paises.value)])
 
 const visiblePages = computed(() => {
   const current = pagination.currentPage
@@ -383,11 +211,14 @@ const visiblePages = computed(() => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 })
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 function sortIcon(field) {
   if (sort.field !== field) return 'unfold_more'
   return sort.direction === 'asc' ? 'arrow_upward' : 'arrow_downward'
+}
+
+function sortPrimeIcon(field) {
+  if (sort.field !== field) return 'pi pi-sort-alt'
+  return sort.direction === 'asc' ? 'pi pi-sort-up' : 'pi pi-sort-down'
 }
 
 function formatPrice(value) {
@@ -397,9 +228,6 @@ function formatPrice(value) {
     minimumFractionDigits: 2,
   }).format(value)
 }
-
-// ── Sincronización URL ← → estado ─────────────────────────────────────────────
-// Mantiene la URL actualizada para que los filtros sean compartibles / navegables
 
 function buildQuery(page = 1) {
   const q = { page }
@@ -422,8 +250,6 @@ function syncFromQuery() {
   pagination.currentPage = Number(route.query.page ?? 1)
 }
 
-// ── Fetch ─────────────────────────────────────────────────────────────────────
-
 async function fetchFormData() {
   try {
     const result = await ProductoController.obtenerFormData()
@@ -436,7 +262,6 @@ async function fetchFormData() {
     marcas.value     = result.marcas
     paises.value     = result.paises
   } catch {
-    // No bloqueante: la tabla sigue siendo útil sin los filtros de selects
     console.warn('No se pudieron cargar los datos de formulario.')
   }
 }
@@ -474,8 +299,6 @@ async function fetchProductos() {
   }
 }
 
-// ── Acciones de filtro / orden ─────────────────────────────────────────────────
-
 function applyFilters() {
   router.push({ query: buildQuery(1) })
 }
@@ -503,8 +326,6 @@ function goToPage(page) {
   router.push({ query: buildQuery(page) })
 }
 
-// ── Modal de eliminación ──────────────────────────────────────────────────────
-
 function openDeleteModal(producto) {
   deleteModal.producto = producto
   deleteModal.visible  = true
@@ -528,10 +349,8 @@ async function confirmDelete() {
     }
 
     notif.show('Producto eliminado de la bodega', 'success')
-      // quitar estado de carga antes de cerrar el modal para permitir el cierre
-      deleteModal.loading = false
-      closeDeleteModal()
-    // Si la página actual queda vacía al borrar el último ítem, retroceder una página
+    deleteModal.loading = false
+    closeDeleteModal()
     const isLastItemOnPage = productos.value.length === 1 && pagination.currentPage > 1
     await fetchProductos()
     if (isLastItemOnPage) goToPage(pagination.currentPage - 1)
@@ -543,10 +362,6 @@ async function confirmDelete() {
   }
 }
 
-// ── Ciclo de vida ─────────────────────────────────────────────────────────────
-
-// Cuando la query string de la URL cambia (back/forward, applyFilters, etc.)
-// sincronizamos el estado y recargamos
 watch(
   () => route.query,
   () => {
@@ -557,7 +372,7 @@ watch(
 
 onMounted(() => {
   syncFromQuery()
-  fetchFormData()   // carga selects de filtros (no bloquea tabla)
-  fetchProductos()  // carga la tabla
+  fetchFormData()
+  fetchProductos()
 })
 </script>

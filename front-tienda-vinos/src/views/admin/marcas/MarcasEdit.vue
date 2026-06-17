@@ -1,87 +1,56 @@
 <template>
   <div class="create-view-wrapper">
-    <div v-if="initialLoading" style="display:flex;justify-content:center;padding:80px 0;">
-      <span class="material-symbols-outlined" style="font-size:48px;color:var(--tertiary);animation:spin 1s linear infinite;">progress_activity</span>
+    <div v-if="initialLoading" class="admin-loading">
+      <ProgressSpinner />
     </div>
 
     <form v-else @submit.prevent="submitForm">
-
       <header class="header-section">
         <div class="header-text">
           <h1>Editar Casa Vinícola</h1>
           <p>Actualiza la información y el legado de esta bodega en el catálogo.</p>
         </div>
         <div class="header-actions">
-          <router-link :to="{ name: 'admin.marcas.index' }" class="btn-discard">Descartar</router-link>
-          <button type="submit" class="btn-save" :disabled="loading">
-            {{ loading ? 'Actualizando...' : 'Actualizar Bodega' }}
-          </button>
+          <router-link :to="{ name: 'admin.marcas.index' }" custom v-slot="{ navigate }">
+            <Button label="Descartar" severity="secondary" outlined @click="navigate" />
+          </router-link>
+          <Button type="submit" label="Actualizar Bodega" :loading="loading" style="background-color: var(--primary);border: none;"/>
         </div>
       </header>
 
-      <div v-if="error" class="alert-premium error" style="margin-bottom:32px;">
-        <span class="material-symbols-outlined alert-icon">error</span>
-        <div class="alert-content">
-          <span class="alert-title">Error</span>
-          <p class="alert-message">{{ error }}</p>
+      <Message v-if="error" severity="error" class="mb-4">{{ error }}</Message>
+
+      <div class="grid">
+        <div class="col-12 lg:col-8">
+          <Card class="admin-card mb-4 bg-transparent">
+            <template #title>Identidad de la Casa</template>
+            <template #content>
+              <div class="grid formgrid">
+                <div class="field col-12 md:col-6">
+                  <label for="nombre" class="admin-label">Nombre de la Bodega</label>
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Vega Sicilia" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="pais" class="admin-label">País de Origen</label>
+                  <Select v-model="form.pais" id="pais" :options="paises" class="w-full" placeholder="Buscar país..." filter style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                </div>
+                <div class="field col-12">
+                  <label for="sitio_web" class="admin-label">Sitio Web Oficial</label>
+                  <InputText v-model="form.sitio_web" id="sitio_web" type="url" class="w-full" placeholder="https://www.bodega.com" style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                </div>
+              </div>
+            </template>
+          </Card>
+
+          <Card class="admin-card bg-transparent">
+            <template #title>Historia y Legado</template>
+            <template #content>
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Cuentanos la historia de esta bodega, sus metodos y filosofia..." style="border: none;background-color: var(--surface-container-low);border-radius: 12px;"/>
+            </template>
+          </Card>
         </div>
+
       </div>
-
-      <div class="main-grid">
-        <div class="form-column">
-
-          <!-- Section 01 -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">01</span>
-              <h2>Identidad de la Casa</h2>
-            </div>
-            <div class="input-grid">
-              <div class="form-group">
-                <label for="nombre">Nombre de la Bodega</label>
-                <input v-model="form.nombre" type="text" id="nombre" placeholder="ej. Vega Sicilia" required>
-              </div>
-              <div class="form-group">
-                <label for="pais">País de Origen</label>
-                <input v-model="form.pais" list="paises-list" id="pais" class="premium-datalist-input" placeholder="Buscar país...">
-                <datalist id="paises-list">
-                  <option v-for="pais in paises" :key="pais" :value="pais"></option>
-                </datalist>
-              </div>
-              <div class="form-group">
-                <label for="sitio_web">Sitio Web Oficial</label>
-                <input v-model="form.sitio_web" type="url" id="sitio_web" placeholder="https://www.bodega.com">
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 02 -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">02</span>
-              <h2>Historia y Legado</h2>
-            </div>
-            <div class="note-area">
-              <textarea v-model="form.descripcion" id="descripcion" rows="6" placeholder="Cuéntanos la historia de esta bodega, sus métodos y filosofía..."></textarea>
-              <div class="note-badge">Voz Editorial</div>
-            </div>
-          </section>
-
-        </div>
-
-        <div class="visual-column">
-          <div class="curator-tip">
-            <div class="tip-header">
-              <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
-              Prestigio de Marca
-            </div>
-            <p class="tip-text">
-              "Mantener la información actualizada, especialmente los sitios web oficiales, genera confianza en los coleccionistas más detallistas."
-            </p>
-          </div>
-        </div>
-      </div>
-
     </form>
   </div>
 </template>
@@ -102,9 +71,9 @@ const loading = ref(false)
 const error = ref(null)
 
 const paises = [
-  'Argentina', 'Australia', 'Austria', 'Chile', 'España', 'Estados Unidos',
-  'Francia', 'Alemania', 'Italia', 'Nueva Zelanda', 'Portugal', 'Sudáfrica',
-  'Uruguay', 'Grecia', 'Hungría', 'Costa Rica'
+  'Argentina', 'Australia', 'Austria', 'Chile', 'Espana', 'Estados Unidos',
+  'Francia', 'Alemania', 'Italia', 'Nueva Zelanda', 'Portugal', 'Sudafrica',
+  'Uruguay', 'Grecia', 'Hungria', 'Costa Rica'
 ]
 
 const form = reactive({
@@ -123,7 +92,7 @@ async function fetchData() {
     form.sitio_web = result.marca.sitio_web || ''
     form.descripcion = result.marca.descripcion || ''
   } catch (err) {
-    error.value = 'No se encontró la marca.'
+    error.value = 'No se encontro la marca.'
     console.error(err)
   } finally {
     initialLoading.value = false
@@ -149,10 +118,3 @@ async function submitForm() {
 
 onMounted(fetchData)
 </script>
-
-<style scoped>
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-</style>

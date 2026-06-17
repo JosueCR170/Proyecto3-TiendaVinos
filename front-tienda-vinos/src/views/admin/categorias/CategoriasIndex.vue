@@ -2,124 +2,73 @@
   <div class="index-view">
     <header class="index-header">
       <div class="header-info">
-        <h1>Arquitectura de Colección</h1>
+        <h1>Arquitectura de Coleccion</h1>
         <p>Gestiona las categorías editoriales que estructuran la cava digital.</p>
       </div>
-      <div class="header-actions">
-        <router-link :to="{ name: 'admin.categorias.create' }" class="btn-create">
-          <span class="material-symbols-outlined">add</span>
-          <span>Nueva Categoría Principal</span>
-        </router-link>
-      </div>
+      <router-link :to="{ name: 'admin.categorias.create' }" custom v-slot="{ navigate }">
+        <Button label="Nueva Categoria Principal" icon="pi pi-plus" @click="navigate" style="background-color: var(--primary);border: none;"/>
+      </router-link>
     </header>
 
-    <!-- Barra de Filtros -->
-    <div class="filter-bar">
-      <div class="filter-group">
-        <span class="material-symbols-outlined filter-icon">search</span>
-        <input 
-          v-model="searchQuery" 
-          type="text" 
-          class="filter-input" 
-          placeholder="Buscar categorías..."
-        >
-      </div>
-      <button @click="clearSearch" v-if="searchQuery" class="btn-filter">Limpiar Filtros</button>
-    </div>
-
-    <!-- Tabla -->
-    <div class="table-wrapper">
-      <div v-if="loading" class="p-8 flex justify-center">
-        <span class="material-symbols-outlined animate-spin text-3xl text-[#735c00]">progress_activity</span>
-      </div>
-      <div v-else-if="error" class="p-8 text-center text-red-600">
-        {{ error }}
-      </div>
-      <table v-else class="premium-table">
-        <thead>
-          <tr>
-            <th>Estructura de Categoría</th>
-            <th>Nivel</th>
-            <th>Padre</th>
-            <th class="actions-cell">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr 
-            v-for="cat in displayCategorias" 
-            :key="cat.id_categoria"
-          >
-            <td>
-              <div class="product-cell" :style="{ paddingLeft: cat.nivel > 1 ? '2rem' : '0' }">
-                <span v-if="cat.nivel === 1" class="material-symbols-outlined text-secondary" style="font-size: 20px;">folder</span>
-                <span v-else class="text-on-surface-variant/40">—</span>
-                <div class="product-name-info">
-                  <span class="product-name">{{ cat.nombre }}</span>
-                </div>
-              </div>
-            </td>
-            <td>
-              <span class="badge" :class="cat.nivel === 1 ? 'badge-success' : 'badge-neutral'">
-                {{ cat.nivel === 1 ? 'Principal' : 'Subnivel' }}
-              </span>
-            </td>
-            <td class="text-sm text-on-surface-variant">
-              {{ cat.padre ? cat.padre.nombre : 'Raíz' }}
-            </td>
-            <td class="actions-cell">
-              <div class="flex justify-end gap-2">
-                <router-link 
-                  v-if="cat.nivel === 1"
-                  :to="{ name: 'admin.categorias.create', query: { parent_id: cat.id_categoria } }"
-                  class="action-btn"
-                  title="Agregar Subcategoría"
-                >
-                  <span class="material-symbols-outlined">add_circle</span>
-                </router-link>
-                <router-link 
-                  :to="{ name: 'admin.categorias.edit', params: { id: cat.id_categoria } }"
-                  class="action-btn"
-                  title="Editar"
-                >
-                  <span class="material-symbols-outlined">edit</span>
-                </router-link>
-                <button 
-                  @click="openDeleteModal(cat)"
-                  class="action-btn delete"
-                  title="Eliminar"
-                >
-                  <span class="material-symbols-outlined">delete</span>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr v-if="displayCategorias.length === 0">
-            <td colspan="4" class="p-8 text-center text-gray-500">
-              No se encontraron categorías.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-      <Teleport to="body">
-        <div v-if="deleteModal.visible" class="modal-overlay" @click.self="closeDeleteModal">
-          <div class="modal-content">
-            <div class="modal-header-icon">
-              <span class="material-symbols-outlined">warning</span>
-            </div>
-            <h2>¿Eliminar Categoría?</h2>
-            <p>Estás a punto de eliminar <strong>{{ deleteModal.categoria?.nombre }}</strong>. Esta acción es irreversible.</p>
-            <div class="modal-warning">
-              <span class="material-symbols-outlined" style="font-size: 16px;">info</span>
-              <span>Si la categoría está en uso por productos, la eliminación fallará.</span>
-            </div>
-            <div class="modal-actions">
-              <button class="btn-modal-cancel" @click="closeDeleteModal" :disabled="deleteModal.loading">Cancelar</button>
-              <button class="btn-modal-confirm" :disabled="deleteModal.loading" @click="confirmDelete">{{ deleteModal.loading ? 'Eliminando...' : 'Eliminar Permanentemente' }}</button>
-            </div>
-          </div>
+    <Card class="admin-card mb-4 bg-transparent">
+      <template #content>
+        <div class="flex flex-column md:flex-row gap-3 md:align-items-center">
+          <IconField class="flex-1">
+            <InputIcon class="pi pi-search" />
+            <InputText v-model="searchQuery" class="w-full" placeholder="Buscar categorías..." />
+          </IconField>
+          <Button v-if="searchQuery" label="Limpiar filtros" icon="pi pi-filter-slash" severity="secondary" outlined @click="clearSearch" />
         </div>
-      </Teleport>
+      </template>
+    </Card>
+
+    <Message v-if="error" severity="error" class="mb-4">{{ error }}</Message>
+
+    <DataTable v-else :value="displayCategorias" :loading="loading" dataKey="id_categoria" class="admin-table" stripedRows>
+      <template #empty>No se encontraron categorías.</template>
+
+      <Column header="Estructura de Categoría">
+        <template #body="{ data: cat }">
+          <div class="flex align-items-center gap-3" :style="{ paddingLeft: cat.nivel > 1 ? '2rem' : '0' }">
+            <i :class="cat.nivel === 1 ? 'pi pi-folder' : 'pi pi-angle-right text-500'"></i>
+            <span class="font-bold product-name">{{ cat.nombre }}</span>
+          </div>
+        </template>
+      </Column>
+
+      <Column header="Nivel">
+        <template #body="{ data: cat }">
+          <Tag :value="cat.nivel === 1 ? 'Principal' : 'Subnivel'" :severity="cat.nivel === 1 ? 'success' : 'secondary'" />
+        </template>
+      </Column>
+
+      <Column header="Padre">
+        <template #body="{ data: cat }">{{ cat.padre ? cat.padre.nombre : 'Raiz' }}</template>
+      </Column>
+
+      <Column header="Acciones" bodyClass="text-right">
+        <template #body="{ data: cat }">
+          <div class="flex justify-content-end gap-2">
+            <router-link v-if="cat.nivel === 1" :to="{ name: 'admin.categorias.create', query: { parent_id: cat.id_categoria } }" custom v-slot="{ navigate }">
+              <Button icon="pi pi-plus-circle" severity="secondary" text rounded aria-label="Agregar subcategoria" @click="navigate" />
+            </router-link>
+            <router-link :to="{ name: 'admin.categorias.edit', params: { id: cat.id_categoria } }" custom v-slot="{ navigate }">
+              <Button icon="pi pi-pencil" severity="secondary" text rounded aria-label="Editar" @click="navigate" />
+            </router-link>
+            <Button icon="pi pi-trash" severity="danger" text rounded aria-label="Eliminar" @click="openDeleteModal(cat)" />
+          </div>
+        </template>
+      </Column>
+    </DataTable>
+
+    <Dialog v-model:visible="deleteModal.visible" modal header="Eliminar Categoría" :style="{ width: '32rem' }">
+      <p class="mb-3">Estás a punto de eliminar <strong>{{ deleteModal.categoria?.nombre }}</strong>. Esta acción es irreversible.</p>
+      <Message severity="warn">Si la categoría esta en uso por productos, la eliminación fallará.</Message>
+      <template #footer>
+        <Button label="Cancelar" severity="secondary" outlined :disabled="deleteModal.loading" @click="closeDeleteModal" />
+        <Button label="Eliminar Permanentemente" severity="danger" :loading="deleteModal.loading" @click="confirmDelete" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -137,20 +86,17 @@ const searchQuery = ref('')
 const displayCategorias = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
 
-  // helper to match search
   const matches = (c) => {
     if (!q) return true
     return c.nombre.toLowerCase().includes(q) || (c.descripcion && c.descripcion.toLowerCase().includes(q))
   }
 
-  // if searching, just return filtered and sorted by nombre
   if (q) {
     return categorias.value
       .filter(matches)
       .sort((a, b) => a.nombre.localeCompare(b.nombre))
   }
 
-  // No search: group by parent — show each principal category followed by its subcategories
   const parents = categorias.value.filter(c => c.nivel === 1).sort((a, b) => a.nombre.localeCompare(b.nombre))
   const children = categorias.value.filter(c => c.nivel !== 1)
 
@@ -169,7 +115,6 @@ const displayCategorias = computed(() => {
     chs.forEach(c => result.push(c))
   })
 
-  // also include any orphan children or categories without parent at the end
   const parentIds = new Set(parents.map(p => p.id_categoria))
   categorias.value.forEach(c => {
     if (c.nivel !== 1 && (!c.padre || !parentIds.has(c.padre.id_categoria))) {
