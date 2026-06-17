@@ -1,95 +1,58 @@
 <template>
   <div class="create-view-wrapper">
     <form @submit.prevent="submitForm">
-
       <header class="header-section">
         <div class="header-text">
-          <h1>Nueva Categoría Editorial</h1>
-          <p>Define una nueva rama en la estructura jerárquica de la colección.</p>
+          <h1>Nueva Categoria Editorial</h1>
+          <p>Define una nueva rama en la estructura jerarquica de la coleccion.</p>
         </div>
         <div class="header-actions">
-          <router-link :to="{ name: 'admin.categorias.index' }" class="btn-discard">Descartar</router-link>
-          <button type="submit" class="btn-save" :disabled="loading">
-            {{ loading ? 'Guardando...' : 'Guardar Categoría' }}
-          </button>
+          <router-link :to="{ name: 'admin.categorias.index' }" custom v-slot="{ navigate }">
+            <Button label="Descartar" severity="secondary" outlined @click="navigate" />
+          </router-link>
+          <Button type="submit" label="Guardar Categoria" icon="pi pi-save" :loading="loading" />
         </div>
       </header>
 
-      <div v-if="error" class="alert-premium error" style="margin-bottom:32px;">
-        <span class="material-symbols-outlined alert-icon">error</span>
-        <div class="alert-content">
-          <span class="alert-title">Error</span>
-          <p class="alert-message">{{ error }}</p>
+      <Message v-if="error" severity="error" class="mb-4">{{ error }}</Message>
+
+      <div class="grid">
+        <div class="col-12 lg:col-8">
+          <Card class="admin-card mb-4">
+            <template #title>Identidad de la Categoria</template>
+            <template #content>
+              <div class="grid formgrid">
+                <div class="field col-12 md:col-6">
+                  <label for="nombre" class="admin-label">Nombre de la Categoria</label>
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Tintos de Guarda" required />
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="nivel_display" class="admin-label">Nivel Jerarquico</label>
+                  <Select v-model="form.nivel" id="nivel_display" :options="nivelOptions" optionLabel="label" optionValue="value" class="w-full" disabled />
+                </div>
+                <div class="field col-12">
+                  <label for="nombre_padre" class="admin-label">Categoria Padre</label>
+                  <InputText v-if="form.nivel === 1" modelValue="Ninguna (Raiz)" class="w-full" disabled />
+                  <Select v-else v-model="form.nombre_padre" id="nombre_padre" :options="categoriasPrincipales" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccione una categoria superior" required />
+                </div>
+              </div>
+            </template>
+          </Card>
+
+          <Card class="admin-card">
+            <template #title>Descripcion Editorial</template>
+            <template #content>
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Define el proposito y caracter de esta categoria..." />
+            </template>
+          </Card>
+        </div>
+
+        <div class="col-12 lg:col-4">
+          <Message severity="info" :closable="false">
+            Una buena categorizacion permite navegar la cava con mayor fluidez. Usa nombres concisos y descriptivos.
+          </Message>
         </div>
       </div>
-
-      <div class="main-grid">
-        <div class="form-column">
-
-          <!-- Section 01 -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">01</span>
-              <h2>Identidad de la Categoría</h2>
-            </div>
-            <div class="input-grid">
-              <div class="form-group">
-                <label for="nombre">Nombre de la Categoría</label>
-                <input v-model="form.nombre" type="text" id="nombre" placeholder="ej. Tintos de Guarda" required>
-              </div>
-              <div class="form-group">
-                <label for="nivel_display">Nivel Jerárquico</label>
-                <select id="nivel_display" class="premium-select" disabled>
-                  <option :value="1" :selected="form.nivel === 1">Nivel 1 (Principal)</option>
-                  <option :value="2" :selected="form.nivel === 2">Nivel 2 (Subcategoría)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="nombre_padre">Categoría Padre (Si aplica)</label>
-                <template v-if="form.nivel === 1">
-                  <select class="premium-select" disabled>
-                    <option value="">Ninguna (Raíz)</option>
-                  </select>
-                </template>
-                <template v-else>
-                  <select v-model="form.nombre_padre" id="nombre_padre" class="premium-select" required>
-                    <option value="" disabled>Seleccione una categoría superior</option>
-                    <option v-for="cat in categoriasPrincipales" :key="cat.id_categoria" :value="cat.id_categoria">
-                      {{ cat.nombre }}
-                    </option>
-                  </select>
-                </template>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 02 -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">02</span>
-              <h2>Descripción Editorial</h2>
-            </div>
-            <div class="note-area">
-              <textarea v-model="form.descripcion" id="descripcion" rows="6" placeholder="Define el propósito y carácter de esta categoría..."></textarea>
-              <div class="note-badge">Voz de Cava</div>
-            </div>
-          </section>
-
-        </div>
-
-        <div class="visual-column">
-          <div class="curator-tip">
-            <div class="tip-header">
-              <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
-              Estructura de Bodega
-            </div>
-            <p class="tip-text">
-              "Una buena categorización permite a los coleccionistas navegar por la cava con mayor fluidez. Mantenga los nombres concisos pero descriptivos."
-            </p>
-          </div>
-        </div>
-      </div>
-
     </form>
   </div>
 </template>
@@ -107,6 +70,10 @@ const notif = useNotificationStore()
 const loading = ref(false)
 const error = ref(null)
 const todasCategorias = ref([])
+const nivelOptions = [
+  { label: 'Nivel 1 (Principal)', value: 1 },
+  { label: 'Nivel 2 (Subcategoria)', value: 2 }
+]
 
 const form = reactive({
   nombre: '',
@@ -125,7 +92,7 @@ async function fetchCategorias() {
     if (!result.success) throw new Error(result.message)
     todasCategorias.value = result.categorias
   } catch (err) {
-    console.error('No se pudieron cargar las categorías.', err)
+    console.error('No se pudieron cargar las categorias.', err)
   }
 }
 
@@ -137,12 +104,12 @@ async function submitForm() {
     if (payload.nivel === 1) payload.nombre_padre = null
     const result = await CategoriaController.crearCategoria(payload)
     if (!result.success) throw result
-    notif.show('Categoría creada exitosamente.')
+    notif.show('Categoria creada exitosamente.')
     router.push({ name: 'admin.categorias.index' })
   } catch (err) {
     error.value = err.status === 422
-      ? err.message || 'Datos inválidos. Verifica el formulario.'
-      : 'Ocurrió un error inesperado al guardar la categoría.'
+      ? err.message || 'Datos invalidos. Verifica el formulario.'
+      : 'Ocurrio un error inesperado al guardar la categoria.'
   } finally {
     loading.value = false
   }

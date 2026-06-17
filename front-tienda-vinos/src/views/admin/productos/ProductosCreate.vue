@@ -1,197 +1,139 @@
 <template>
   <div class="create-view-wrapper">
-    <div v-if="loadingForm" class="flex justify-center" style="padding: 80px 0;">
-      <span class="material-symbols-outlined" style="font-size:48px;color:var(--tertiary);animation:spin 1s linear infinite;">progress_activity</span>
+    <div v-if="loadingForm" class="admin-loading">
+      <ProgressSpinner />
     </div>
 
     <form v-else @submit.prevent="submitForm">
-
       <header class="header-section">
         <div class="header-text">
           <h1>Catalogar Nuevo Vino</h1>
-          <p>Define la narrativa, especificaciones técnicas y el legado de una nueva adición a la cava digital.</p>
+          <p>Define la narrativa, especificaciones tecnicas y el legado de una nueva adicion a la cava digital.</p>
         </div>
         <div class="header-actions">
-          <router-link :to="{ name: 'admin.productos.index' }" class="btn-discard">Descartar</router-link>
-          <button type="submit" class="btn-save" :disabled="loadingSubmit">
-            {{ loadingSubmit ? 'Guardando...' : 'Guardar Colección' }}
-          </button>
+          <router-link :to="{ name: 'admin.productos.index' }" custom v-slot="{ navigate }">
+            <Button label="Descartar" severity="secondary" outlined @click="navigate" />
+          </router-link>
+          <Button type="submit" label="Guardar Coleccion" icon="pi pi-save" :loading="loadingSubmit" />
         </div>
       </header>
 
-      <div v-if="error" class="alert-premium error" style="margin-bottom:32px;">
-        <span class="material-symbols-outlined alert-icon">error</span>
-        <div class="alert-content">
-          <span class="alert-title">Error</span>
-          <p class="alert-message">{{ error }}</p>
-        </div>
-      </div>
+      <Message v-if="error" severity="error" class="mb-4">{{ error }}</Message>
 
-      <div class="main-grid">
-        <!-- ── FORM COLUMN ── -->
-        <div class="form-column">
+      <div class="grid">
+        <div class="col-12 xl:col-8">
+          <Card class="admin-card mb-4">
+            <template #title>Informacion Basica</template>
+            <template #content>
+              <div class="grid formgrid">
+                <div class="field col-12 md:col-6">
+                  <label for="nombre" class="admin-label">Nombre del Vino</label>
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Chateau Margaux" required />
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="anio_cosecha" class="admin-label">Cosecha (Vintage)</label>
+                  <InputNumber v-model="form.anio_cosecha" inputId="anio_cosecha" class="w-full" :useGrouping="false" placeholder="2018" />
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="pais" class="admin-label">Pais de Origen</label>
+                  <Select v-model="form.pais" id="pais" :options="paisOptions" class="w-full" placeholder="Seleccionar pais..." filter required />
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="region" class="admin-label">Region / Terroir</label>
+                  <InputText v-model="form.region" id="region" class="w-full" placeholder="Bordeaux" />
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="id_categoria" class="admin-label">Categoria Editorial</label>
+                  <Select v-model="form.id_categoria" id="id_categoria" :options="categorias" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccionar..." required />
+                </div>
+                <div class="field col-12 md:col-6">
+                  <label for="id_marca" class="admin-label">Casa / Bodega</label>
+                  <Select v-model="form.id_marca" id="id_marca" :options="marcas" optionLabel="nombre" optionValue="id_marca" class="w-full" placeholder="Seleccionar..." required />
+                </div>
+              </div>
+            </template>
+          </Card>
 
-          <!-- Section 01: Información Básica -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">01</span>
-              <h2>Información Básica</h2>
-            </div>
-            <div class="input-grid">
-              <div class="form-group">
-                <label for="nombre">Nombre del Vino</label>
-                <input v-model="form.nombre" type="text" id="nombre" placeholder="ej. Château Margaux" required>
+          <Card class="admin-card mb-4">
+            <template #title>Detalles Tecnicos</template>
+            <template #content>
+              <div class="grid formgrid">
+                <div class="field col-12 md:col-4">
+                  <label for="alcohol_porcentaje" class="admin-label">Alcohol por Vol.</label>
+                  <InputNumber v-model="form.alcohol_porcentaje" inputId="alcohol_porcentaje" class="w-full" suffix=" %" :minFractionDigits="1" :maxFractionDigits="1" placeholder="13.5" />
+                </div>
+                <div class="field col-12 md:col-4">
+                  <label for="contenido_ml" class="admin-label">Contenido</label>
+                  <InputNumber v-model="form.contenido_ml" inputId="contenido_ml" class="w-full" suffix=" ml" :useGrouping="false" placeholder="750" />
+                </div>
+                <div class="field col-12 md:col-4">
+                  <label class="admin-label">Estado Inicial</label>
+                  <div class="flex align-items-center gap-3 pt-2">
+                    <ToggleSwitch v-model="form.estado" />
+                    <Tag :value="form.estado ? 'Activo' : 'Inactivo'" :severity="form.estado ? 'success' : 'danger'" />
+                  </div>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="anio_cosecha">Cosecha (Vintage)</label>
-                <input v-model.number="form.anio_cosecha" type="number" id="anio_cosecha" placeholder="2018">
-              </div>
-                          <div class="form-group">
-                            <label for="pais">País de Origen</label>
-                            <select v-model="form.pais" id="pais" class="premium-select" required>
-                              <option value="" disabled>Seleccionar país...</option>
-                              <option v-for="pais in paises" :key="pais" :value="pais">{{ pais }}</option>
-                            </select>
-                          </div>
-              <div class="form-group">
-                <label for="region">Región / Terroir</label>
-                <input v-model="form.region" type="text" id="region" placeholder="Bordeaux">
-              </div>
-              <div class="form-group">
-                <label for="id_categoria">Categoría Editorial</label>
-                <select v-model="form.id_categoria" id="id_categoria" class="premium-select" required>
-                  <option value="" disabled>Seleccionar...</option>
-                  <option v-for="cat in categorias" :key="cat.id_categoria" :value="cat.id_categoria">
-                    {{ cat.nombre }}
-                  </option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="id_marca">Casa / Bodega</label>
-                <select v-model="form.id_marca" id="id_marca" class="premium-select" required>
-                  <option value="" disabled>Seleccionar...</option>
-                  <option v-for="marca in marcas" :key="marca.id_marca" :value="marca.id_marca">{{ marca.nombre }}</option>
-                </select>
-              </div>
-            </div>
-          </section>
+            </template>
+          </Card>
 
-          <!-- Section 02: Detalles Técnicos -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">02</span>
-              <h2>Detalles Técnicos</h2>
-            </div>
-            <div class="details-grid">
-              <div class="detail-card">
-                <label for="alcohol_porcentaje">Alcohol por Vol.</label>
-                <div class="value-wrapper">
-                  <input v-model.number="form.alcohol_porcentaje" type="number" step="0.1" id="alcohol_porcentaje" placeholder="13.5">
-                  <span class="unit">%</span>
-                </div>
-              </div>
-              <div class="detail-card">
-                <label for="contenido_ml">Contenido</label>
-                <div class="value-wrapper">
-                  <input v-model.number="form.contenido_ml" type="number" id="contenido_ml" placeholder="750">
-                  <span class="unit">ml</span>
-                </div>
-              </div>
-              <div class="detail-card">
-                <label>Estado Inicial</label>
-                <div class="status-toggle">
-                  <label class="switch">
-                    <input type="checkbox" v-model="form.estado">
-                    <span class="slider"></span>
-                  </label>
-                  <span class="stock-unit">{{ form.estado ? 'Activo' : 'Inactivo' }}</span>
-                </div>
-              </div>
-            </div>
-          </section>
+          <Card class="admin-card mb-4">
+            <template #title>Nota del Sommelier</template>
+            <template #content>
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Describe el caracter, bouquet y final de esta cosecha..." />
+            </template>
+          </Card>
 
-          <!-- Section 03: Nota del Sommelier -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">03</span>
-              <h2>Nota del Sommelier</h2>
-            </div>
-            <div class="note-area">
-              <textarea v-model="form.descripcion" id="descripcion" rows="6" placeholder="Describe el carácter, bouquet y final de esta cosecha..."></textarea>
-              <div class="note-badge">Voz Editorial</div>
-            </div>
-          </section>
-
-          <!-- Section 04: Valoración y Stock -->
-          <section>
-            <div class="section-header">
-              <span class="section-num">04</span>
-              <h2>Valoración y Stock</h2>
-            </div>
-            <div class="storage-grid">
-              <div class="valuation-item">
-                <label for="precio">Precio Unitario</label>
-                <div class="valuation-input-wrapper">
-                  <span class="currency-symbol">$</span>
-                  <input v-model.number="form.precio" type="number" step="0.01" id="precio" class="large-input" placeholder="0.00" required>
+          <Card class="admin-card">
+            <template #title>Valoracion y Stock</template>
+            <template #content>
+              <div class="grid formgrid">
+                <div class="field col-12 md:col-4">
+                  <label for="precio" class="admin-label">Precio Unitario</label>
+                  <InputNumber v-model="form.precio" inputId="precio" class="w-full" mode="currency" currency="USD" locale="en-US" required />
+                </div>
+                <div class="field col-12 md:col-4">
+                  <label for="cantidad" class="admin-label">Cantidad en Cava</label>
+                  <InputNumber v-model="form.cantidad" inputId="cantidad" class="w-full" suffix=" Botellas" :useGrouping="false" required />
+                </div>
+                <div class="field col-12 md:col-4">
+                  <label for="descuento" class="admin-label">Descuento</label>
+                  <InputNumber v-model="form.descuento" inputId="descuento" class="w-full" suffix=" % OFF" :useGrouping="false" />
                 </div>
               </div>
-              <div class="valuation-item">
-                <label for="cantidad">Cantidad en Cava</label>
-                <div class="valuation-input-wrapper">
-                  <input v-model.number="form.cantidad" type="number" id="cantidad" class="large-input" placeholder="0" required>
-                  <span class="stock-unit">Botellas</span>
-                </div>
-              </div>
-              <div class="valuation-item">
-                <label for="descuento">Descuento (%)</label>
-                <div class="valuation-input-wrapper">
-                  <input v-model.number="form.descuento" type="number" step="1" id="descuento" class="large-input" placeholder="0">
-                  <span class="stock-unit">% OFF</span>
-                </div>
-              </div>
-            </div>
-          </section>
+            </template>
+          </Card>
         </div>
 
-        <!-- ── VISUAL COLUMN ── -->
-        <div class="visual-column">
-          <div class="section-header">
-            <span class="section-num">05</span>
-            <h2>Identidad Visual</h2>
-          </div>
-
-          <div :class="['upload-box', form.imagen_url ? 'has-image' : '']" id="image-container" @click="$refs.fileInput.click()" style="cursor:pointer;">
-            <img :src="form.imagen_url || ''" :class="['preview-img', form.imagen_url ? 'active' : '']" id="product-preview" alt="Preview">
-            <div class="upload-content">
-              <div class="upload-icon-circle">
-                <span class="material-symbols-outlined">image_search</span>
+        <div class="col-12 xl:col-4">
+          <Card class="admin-card mb-4">
+            <template #title>Identidad Visual</template>
+            <template #content>
+              <div class="admin-upload" :class="{ 'has-image': form.imagen_url }" @click="fileInput?.click()">
+                <img v-if="form.imagen_url" :src="form.imagen_url" alt="Preview">
+                <div v-else class="flex flex-column align-items-center gap-3 text-center">
+                  <i class="pi pi-image text-4xl text-primary"></i>
+                  <div>
+                    <h3 class="m-0 text-primary">Estetica de la Botella</h3>
+                    <p class="mt-2 mb-0 text-sm text-600">Sube una fotografia en alta resolucion.</p>
+                  </div>
+                </div>
               </div>
-              <h3>Estética de la Botella</h3>
-              <p>Sube una fotografía en alta resolución que capture la esencia de la etiqueta.</p>
-            </div>
-          </div>
 
-          <input ref="fileInput" type="file" accept="image/*" style="display:none;" @change="handleImageUpload">
+              <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageUpload">
 
-          <div v-if="uploadingImage" style="text-align:center;margin-top:12px;">
-            <span class="material-symbols-outlined" style="font-size:24px;color:var(--tertiary);animation:spin 1s linear infinite;">progress_activity</span>
-          </div>
+              <Button class="w-full mt-3" label="Subir imagen" icon="pi pi-upload" severity="secondary" outlined :loading="uploadingImage" @click="fileInput?.click()" />
 
-          <div class="form-group" style="margin-top: 24px;">
-            <label for="imagen_url">URL de la Imagen Editorial</label>
-            <input v-model="form.imagen_url" type="text" id="imagen_url" placeholder="https://ejemplo.com/imagen.jpg" class="url-input">
-          </div>
+              <div class="field mt-4">
+                <label for="imagen_url" class="admin-label">URL de la Imagen Editorial</label>
+                <InputText v-model="form.imagen_url" id="imagen_url" class="w-full" placeholder="https://ejemplo.com/imagen.jpg" />
+              </div>
+            </template>
+          </Card>
 
-          <div class="curator-tip">
-            <div class="tip-header">
-              <span class="material-symbols-outlined" style="font-size: 14px;">auto_awesome</span>
-              Tip del Curador
-            </div>
-            <p class="tip-text">
-              "Al catalogar vinos de alta gama, asegúrese de resaltar la región y la cosecha, ya que son factores críticos para la valoración del coleccionista."
-            </p>
-          </div>
+          <Message severity="info" :closable="false">
+            Al catalogar vinos de alta gama, resalta la region y la cosecha; son factores criticos de valoracion.
+          </Message>
         </div>
       </div>
     </form>
@@ -199,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ProductoController, ImageController } from '@/controllers'
 import { useNotificationStore } from '@/stores/notifications'
@@ -217,6 +159,10 @@ const marcas = ref([])
 const paises = ref([])
 
 const fileInput = ref(null)
+
+const paisOptions = computed(() =>
+  Array.isArray(paises.value) ? paises.value : Object.values(paises.value)
+)
 
 const form = reactive({
   nombre: '',
@@ -247,7 +193,7 @@ async function fetchFormData() {
     marcas.value = result.marcas
     paises.value = result.paises
   } catch (err) {
-    error.value = 'Error al cargar los datos auxiliares (categorías, marcas).'
+    error.value = 'Error al cargar los datos auxiliares (categorias, marcas).'
     console.error(err)
   } finally {
     loadingForm.value = false
@@ -290,9 +236,9 @@ async function submitForm() {
     router.push({ name: 'admin.productos.index' })
   } catch (err) {
     if (err.status === 422) {
-      error.value = err.message || 'Error de validación. Revisa los campos.'
+      error.value = err.message || 'Error de validacion. Revisa los campos.'
     } else {
-      error.value = 'Ocurrió un error inesperado al guardar el producto.'
+      error.value = 'Ocurrio un error inesperado al guardar el producto.'
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } finally {
@@ -302,11 +248,3 @@ async function submitForm() {
 
 onMounted(fetchFormData)
 </script>
-
-<style scoped>
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-</style>
-
