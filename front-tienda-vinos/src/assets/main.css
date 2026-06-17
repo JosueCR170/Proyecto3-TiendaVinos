@@ -1103,24 +1103,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 .surface-card   { background-color: #ffffff !important; }
 .surface-ground { background-color: #f5f5dc !important; }
 
-/* DataTable fondo blanco */
-:deep(.p-datatable),
-.p-datatable { background: #ffffff !important; }
-
-:deep(.p-datatable .p-datatable-thead > tr > th),
-.p-datatable .p-datatable-thead > tr > th {
-  background: #f5f5dc !important;
-  color: #544341 !important;
-  border-color: rgba(218,193,191,.3) !important;
-}
-
-:deep(.p-datatable .p-datatable-tbody > tr),
-.p-datatable .p-datatable-tbody > tr {
-  background: #ffffff !important;
-  color: #1b1d0e !important;
-  border-color: rgba(218,193,191,.2) !important;
-}
-
 /* Artículos del carrito */
 .surface-border { border-color: rgba(218,193,191,.3) !important; }
 
