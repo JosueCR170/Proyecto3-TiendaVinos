@@ -1073,3 +1073,74 @@ input:checked + .slider:before { transform: translateX(20px); }
   .filter-bar { flex-direction: column; align-items: stretch; }
   .create-view-wrapper { padding: 30px 16px; }
 }
+
+
+/* ── Sobrescribir colores del tema Aura (PrimeVue) ─────────────────────── */
+:root {
+  --p-radiobutton-checked-background:       #2a0002;
+  --p-radiobutton-checked-border-color:     #2a0002;
+  --p-radiobutton-checked-hover-background: #3d0003;
+  --p-radiobutton-checked-hover-border-color: #3d0003;
+
+  --p-checkbox-checked-background:          #2a0002;
+  --p-checkbox-checked-border-color:        #2a0002;
+  --p-checkbox-checked-hover-background:    #3d0003;
+
+  --p-button-outlined-primary-border-color: #2a0002;
+  --p-button-outlined-primary-color:        #2a0002;
+
+  --p-select-focus-border-color:            #2a0002;
+  --p-inputtext-focus-border-color:         #2a0002;
+  --p-focus-ring-color:                     rgba(42,0,2,.2);
+}
+
+/* ── Corregir fondos oscuros del tema Aura en Cart y Checkout ── */
+:root {
+  --p-surface-card:   #ffffff;
+  --p-surface-ground: #f5f5dc;
+  --p-content-background: #ffffff;
+}
+
+.surface-card   { background-color: #ffffff !important; }
+.surface-ground { background-color: #f5f5dc !important; }
+
+/* DataTable fondo blanco */
+:deep(.p-datatable),
+.p-datatable { background: #ffffff !important; }
+
+:deep(.p-datatable .p-datatable-thead > tr > th),
+.p-datatable .p-datatable-thead > tr > th {
+  background: #f5f5dc !important;
+  color: #544341 !important;
+  border-color: rgba(218,193,191,.3) !important;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr),
+.p-datatable .p-datatable-tbody > tr {
+  background: #ffffff !important;
+  color: #1b1d0e !important;
+  border-color: rgba(218,193,191,.2) !important;
+}
+
+/* Artículos del carrito */
+.surface-border { border-color: rgba(218,193,191,.3) !important; }
+
+/* DataTable fondo blanco */
+.p-datatable .p-datatable-thead > tr > th {
+  background: #f5f5dc !important;
+  color: #544341 !important;
+  border-color: rgba(218,193,191,.3) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background: #ffffff !important;
+  color: #1b1d0e !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  border-color: rgba(218,193,191,.2) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: #f5f5dc !important;
+}

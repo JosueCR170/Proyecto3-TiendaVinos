@@ -1,37 +1,42 @@
+MIGRADO
 <template>
   <main class="pt-8">
 
     <!-- ── Hero ─────────────────────────────────────────────────────────── -->
-    <section class="px-5 py-6 surface-ground">
-      <div class="grid align-items-center" style="max-width: 1400px; margin: 0 auto;">
+    <section class="hero-section">
+      <div class="page-container grid align-items-center">
 
-        <!-- Texto -->
         <div class="col-12 lg:col-6">
+          <span class="eyebrow">El Sommelier Digital</span>
           <h1 class="hero-title">
-            El Sommelier Digital:
-            <span class="italic">Excelencia Curada para el Paladar Paciente</span>
+            <span>El Sommelier Digital:</span>
+            <br />
+            <span class="text-italic">Excelencia Curada para el Paladar Paciente</span>
           </h1>
-          <p class="hero-subtitle">
+          <p class="hero-body">
             Un archivo curado de viticultura, donde el tiempo es el ingrediente
             principal y cada botella cuenta la historia de su terruño.
           </p>
+
           <RouterLink to="/catalogo">
-            <Button label="Explorar la Bodega"
-                    class="p-button-lg mt-3"
-                    style="background:#2a0002; border-color:#2a0002;" />
+            <Button label="Explorar la Bodega" class="btn-primary mt-4" />
           </RouterLink>
         </div>
 
-        <!-- Imagen hero -->
-        <div class="col-12 lg:col-6 flex justify-content-center mt-5 lg:mt-0">
-          <div class="hero-img-wrap border-round-lg overflow-hidden shadow-4
-                      flex align-items-center justify-content-center p-4"
-               style="width:300px; height:400px; background:#f5f5dc;">
-            <img v-if="destacados[0]?.imagen_url"
-                 :alt="destacados[0].nombre"
-                 :src="destacados[0].imagen_url"
-                 style="max-width:100%; max-height:100%; object-fit:contain;" />
-            <i v-else class="pi pi-star" style="font-size:5rem; color:#dac1bf; opacity:.4;"></i>
+        <div class="col-12 lg:col-6 relative">
+          <div class="hero-img-main border-round overflow-hidden shadow-4">
+            <img
+              v-if="destacados[0]?.imagen_url"
+              :alt="destacados[0].nombre"
+              :src="destacados[0].imagen_url"
+              class="w-full h-full"
+              style="object-fit:cover"
+            />
+            <i v-else class="pi pi-star" style="font-size:6rem; color:#dac1bf; opacity:.4;"></i>
+          </div>
+
+          <div class="hero-img-floating absolute border-round overflow-hidden shadow-5 hidden lg:block">
+            <img v-if="destacados[1]?.imagen_url" :src="destacados[1].imagen_url" alt="" class="w-full h-full" style="object-fit:contain;" />
           </div>
         </div>
 
@@ -39,7 +44,7 @@
     </section>
 
     <!-- ── Vinos Destacados ──────────────────────────────────────────────── -->
-    <section class="py-6 px-5" style="background:#f5f5dc;">
+    <section class="py-6 px-5" style="background:#fbfbe2;">
       <div style="max-width:1400px; margin:0 auto;">
 
         <div class="flex justify-content-between align-items-end mb-5">
@@ -66,12 +71,11 @@
                class="col-12 md:col-6 lg:col-4"
                :class="index === 1 ? 'lg:mt-5' : ''">
 
-            <Card class="product-card h-full cursor-pointer border-round-lg"
-                  style="background:#fffff0;">
+            <Card class="product-card h-full border-round-lg" style="background:rgb(245, 245, 220); border: 1px solid rgba(218,193,191,.3);">
               <template #header>
                 <RouterLink :to="`/catalogo/${producto.id_producto}`" class="no-underline">
                   <div class="relative flex align-items-center justify-content-center p-4"
-                       style="height:300px; background:#f5f5dc; border-radius:12px 12px 0 0;">
+                       style="height:300px; background:rgb(245, 245, 220); border-radius:12px 12px 0 0;">
                     <img v-if="producto.imagen_url"
                          :alt="producto.nombre"
                          :src="producto.imagen_url"
@@ -123,7 +127,7 @@
     </section>
 
     <!-- ── Ofertas Imperdibles ────────────────────────────────────────────── -->
-    <section v-if="descuentos.length" class="py-6 px-5" style="background:#f5f5dc;">
+    <section v-if="descuentos.length" class="py-6 px-5" style="background:#fbfbe2;">
       <div style="max-width:1400px; margin:0 auto;">
 
         <div class="flex justify-content-between align-items-end mb-5">
@@ -141,7 +145,7 @@
                :key="producto.id_producto"
                class="col-12 md:col-6 lg:col-4">
 
-            <Card class="product-card h-full border-round-lg" style="background:#fffff0;">
+            <Card class="product-card h-full border-round-lg" style="background:rgb(245, 245, 220);;">
               <template #header>
                 <RouterLink :to="`/catalogo/${producto.id_producto}`" class="no-underline">
                   <div class="relative flex align-items-center justify-content-center p-4"
@@ -202,7 +206,7 @@
     </section>
 
     <!-- ── Ediciones Especiales ──────────────────────────────────────────── -->
-    <section class="py-6 px-5" style="background:#f5f5dc;">
+    <section class="py-6 px-5" style="background:#fbfbe2;">
       <div style="max-width:1400px; margin:0 auto;">
         <div class="grid align-items-center">
 
@@ -319,6 +323,76 @@ onMounted(fetchHome)
 </script>
 
 <style scoped>
+.page-container { max-width: 1280px; margin-inline: auto; padding-inline: 1.5rem; }
+@media (min-width: 768px) { .page-container { padding-inline: 3rem; } }
+
+.hero-section {
+  position: relative;
+  min-height: 80vh;
+  overflow: hidden;
+  background-color: #fbfbe2;
+  padding-block: 4rem;
+}
+
+.eyebrow {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: #735c00;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  display: block;
+}
+
+.hero-title {
+  font-family: 'Noto Serif', serif;
+  color: #2a0002;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  margin-bottom: 1.25rem;
+}
+.text-italic { font-style: italic; }
+
+.hero-body {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.05rem;
+  color: #544341;
+  max-width: 36rem;
+  line-height: 1.7;
+}
+
+.hero-img-main {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  background-color: #fbfbe2;
+  transform: rotate(4deg);
+}
+.hero-img-main img { display:block; width:100%; height:100%; }
+
+.hero-img-floating {
+  width: 220px;
+  aspect-ratio: 1 / 1;
+  bottom: -2.5rem;
+  left: -2.5rem;
+  background-color: #2a0002;
+  border: 12px solid #fbfbe2;
+  transform: rotate(-6deg);
+}
+
+.btn-primary {
+  background-color: #2a0002 !important;
+  border-color: #2a0002 !important;
+  color: #fff !important;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  padding: 0.9rem 1.6rem;
+  border-radius: 6px;
+}
+
 .hero-title {
   font-family: 'Noto Serif', serif;
   font-size: clamp(2rem, 4vw, 3.5rem);

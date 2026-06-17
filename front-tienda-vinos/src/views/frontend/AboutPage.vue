@@ -37,7 +37,7 @@
     </section>
 
     <!-- ── Filosofía ─────────────────────────────────────────────────────── -->
-    <section class="surface-section">
+    <section class="surface-section" style="background-color: var(--brand-beige);">
       <div class="page-container">
         <div class="philosophy-block mx-auto text-center">
           <h2 class="philosophy-quote">
@@ -118,7 +118,7 @@
         </div>
 
         <!-- Texto -->
-        <div class="col-12 md:col-6">
+        <div class="col-12 md:col-6 mission-text">
           <span class="eyebrow">Nuestra Misión</span>
           <h2 class="mission-title">Seleccionando lo <br />Inalcanzable.</h2>
           <p class="mission-body">
@@ -160,6 +160,14 @@ import Card from 'primevue/card';
 </script>
 
 <style scoped>
+/* Unificar paleta: usar variables y ajustar fondos/textos al beige de la app */
+:root{
+  --brand-beige: #fbfbe2;
+  --brand-burgundy: #2a0002;
+  --brand-body: #544341;
+  --brand-accent: #735c00;
+}
+
 /* ── Tokens de marca (no cubiertos por PrimeFlex) ──────────────────────── */
 .page-container {
   max-width: 1280px;
@@ -175,7 +183,7 @@ import Card from 'primevue/card';
   position: relative;
   min-height: 80vh;
   overflow: hidden;
-  background-color: #f5f5dc;
+  background-color: var(--brand-beige);
   padding-block: 4rem;
 }
 
@@ -184,7 +192,7 @@ import Card from 'primevue/card';
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.3em;
-  color: #735c00;
+  color: var(--brand-accent);
   margin-bottom: 1.5rem;
   font-weight: 700;
   display: block;
@@ -192,8 +200,8 @@ import Card from 'primevue/card';
 
 .hero-title {
   font-family: 'Noto Serif', serif;
-  color: #2a0002;
-  font-size: clamp(3rem, 8vw, 8rem);
+  color: var(--brand-burgundy);
+  font-size: clamp(3rem, 8vw, 6.5rem);
   line-height: 1;
   margin-bottom: 2rem;
   margin-left: -4px;
@@ -204,7 +212,7 @@ import Card from 'primevue/card';
 .hero-body {
   font-family: 'Manrope', sans-serif;
   font-size: 1.125rem;
-  color: #544341;
+  color: var(--brand-body);
   max-width: 28rem;
   line-height: 1.7;
 }
@@ -212,7 +220,7 @@ import Card from 'primevue/card';
 .hero-img-main {
   aspect-ratio: 3 / 4;
   width: 100%;
-  background-color: #e4e4cc;
+  background-color: var(--brand-beige);
   transform: rotate(2deg);
 }
 
@@ -221,57 +229,66 @@ import Card from 'primevue/card';
   width: 16rem;
   bottom: -3rem;
   left: -3rem;
-  background-color: #2a0002;
-  border: 12px solid #fbfbe2;
+  background-color: var(--brand-burgundy);
+  border: 12px solid var(--brand-beige);
   transform: rotate(-3deg);
 }
-.hero-img-floating img { opacity: 0.9; }
+.hero-img-floating img { opacity: 0.95; }
 
 /* Filosofía */
-.surface-section { padding-block: 8rem; background-color: #fbfbe2; }
+.surface-section { padding-block: 8rem; background-color: var(--brand-beige) !important; }
 
-.philosophy-block { max-width: 56rem; }
+.philosophy-block { max-width: 72rem; }
 
 .philosophy-quote {
   font-family: 'Noto Serif', serif;
-  font-size: 2.25rem;
-  color: #2a0002;
+  font-size: 2rem;
+  color: #111111; /* texto oscuro para máxima legibilidad */
   font-style: italic;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .pillar-card { background: transparent; box-shadow: none; text-align: left; }
 .pillar-card :deep(.p-card-title) {
   font-family: 'Noto Serif', serif;
-  font-size: 1.25rem;
-  color: #2a0002;
+  font-size: 1.125rem;
+  color: #111111; 
 }
 .pillar-card :deep(.p-card-body) { padding: 0; }
 .pillar-body {
   font-family: 'Manrope', sans-serif;
-  font-size: 0.875rem;
-  color: #544341;
-  line-height: 1.7;
+  font-size: 0.95rem;
+  color: #111111; /* texto de los párrafos en negro para contraste */
+  line-height: 1.8;
 }
 
-/* Editorial */
-.editorial-section { height: 614px; }
+/* Editorial: imagen de fondo con overlay oscuro y texto claro */
+.editorial-section { height: 614px; position: relative; overflow: hidden; }
+.editorial-section img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .editorial-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(42, 0, 2, 0.2);
   backdrop-filter: brightness(75%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 1.5rem;
 }
 .editorial-headline {
   font-family: 'Noto Serif', serif;
   color: white;
-  font-size: clamp(2rem, 7vw, 4.5rem);
+  font-size: clamp(3rem, 7vw, 5rem);
   font-style: italic;
+  text-align: center;
+  text-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 
 /* Misión */
 .mission-img {
   aspect-ratio: 4 / 5;
   width: 100%;
-  background-color: #f5f5dc;
+  background-color: var(--brand-beige) !important;
 }
 
 .mission-card {
@@ -289,31 +306,34 @@ import Card from 'primevue/card';
 
 .mission-title {
   font-family: 'Noto Serif', serif;
-  font-size: 3rem;
-  color: #2a0002;
+  font-size: 3.25rem;
+  color: var(--brand-burgundy);
   margin-bottom: 2rem;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .mission-body {
   font-family: 'Manrope', sans-serif;
   font-size: 1.125rem;
-  color: #544341;
+  color: var(--brand-body);
   margin-bottom: 3rem;
   line-height: 1.7;
 }
+
+.mission-text { padding-left: 2.5rem; }
+@media (max-width: 767px) { .mission-text { padding-left: 0; } }
 
 .feature-row {
   border-bottom: 1px solid rgba(218, 193, 191, 0.2);
   padding-bottom: 1rem;
   font-family: 'Manrope', sans-serif;
 }
-.feature-icon { color: #735c00; font-size: 1.25rem; }
+.feature-icon { color: var(--brand-accent); font-size: 1.25rem; }
 
 /* Botón principal: se reusa para cualquier <Button class="btn-primary"> */
 :deep(.btn-primary) {
-  background-color: #2a0002;
-  border-color: #2a0002;
+  background-color: var(--brand-burgundy);
+  border-color: var(--brand-burgundy);
   font-family: 'Manrope', sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;

@@ -182,12 +182,14 @@
               </router-link>
 
               <Button
-                v-if="producto.cantidad > 0"
-                icon="pi pi-shopping-cart"
-                rounded
-                class="cart-quick-btn"
-                @click="addToCart(producto)"
-              />
+  v-if="producto.cantidad > 0"
+  icon="pi pi-cart-plus"
+  rounded
+  text
+  class="cart-quick-btn"
+  style="background:#2a0002; color:white;"
+  @click="addToCart(producto)"
+/>
             </div>
 
             <div class="product-info">
@@ -438,6 +440,43 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+/* RadioButton color */
+:deep(.p-radiobutton .p-radiobutton-box.p-highlight) {
+  background: #2a0002;
+  border-color: #2a0002;
+}
+:deep(.p-radiobutton .p-radiobutton-box:hover) {
+  border-color: #2a0002;
+}
+
+/* Checkbox color */
+:deep(.p-checkbox .p-checkbox-box.p-highlight) {
+  background: #2a0002;
+  border-color: #2a0002;
+}
+
+/* Botón de búsqueda (flecha) */
+:deep(.p-inputtext:focus) {
+  border-color: #2a0002;
+  box-shadow: 0 0 0 1px #2a0002;
+}
+
+.p-button.p-button-outlined {
+  color: #2a0002 !important;
+  border-color: #2a0002 !important;
+}
+
+.p-inputtext {
+  background: white !important;
+  color: #1b1d0e !important;
+}
+
+.p-select {
+  background: white !important;
+  color: #1b1d0e !important;
+}
+
 .catalog-layout {
   min-height: 100vh;
   gap: 4rem;

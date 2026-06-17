@@ -1,217 +1,237 @@
 <template>
-    <main class="max-w-screen-2xl mx-auto px-6 md:px-12 pt-12 pb-24">
-      <!-- Migas de pan -->
-      <nav class="mb-8 text-xs font-label uppercase tracking-widest text-on-surface/50">
-        <router-link to="/" class="hover:text-primary transition-colors">Inicio</router-link>
-        <span class="mx-2">/</span>
-        <router-link to="/catalogo" class="hover:text-primary transition-colors">Catálogo</router-link>
-        <span class="mx-2">/</span>
-        <span class="text-primary">{{ producto.nombre }}</span>
-      </nav>
+  <main class="page-container py-6">
 
-      <!-- Asymmetric Product Layout -->
-      <template v-if="producto.id_producto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-          <!-- Left: Image -->
-          <div class="lg:col-span-5 relative">
-            <div class="bg-surface-container-low rounded-lg p-12 lg:sticky lg:top-32 shadow-[0_20px_40px_-10px_rgba(27,29,14,0.06)] aspect-[3/4] flex flex-col items-center justify-between">
-              <div class="w-full flex-grow flex items-center justify-center">
-                <template v-if="producto.imagen_url">
-                  <img :alt="producto.nombre" class="max-w-full max-h-full object-contain transform hover:scale-105 transition-transform duration-700" :src="producto.imagen_url"/>
-                </template>
-                <template v-else>
-                  <div class="flex items-center justify-center">
-                    <span class="material-symbols-outlined text-9xl text-outline-variant/30">wine_bar</span>
-                  </div>
-                </template>
-              </div>
-              <div class="w-full pt-6 border-t border-outline-variant/20 flex justify-center">
-                <router-link
-                  :to="{ name: 'admin.productos.index', query: { search: producto.nombre } }"
-                  class="flex items-center gap-2 font-label text-xs uppercase tracking-widest text-[#735c00] hover:text-primary transition-colors font-bold"
-                >
-                  <span class="material-symbols-outlined text-base">edit</span>
-                  Editar producto en Admin
-                </router-link>
-              </div>
+    <!-- Migas de pan -->
+    <nav class="mb-5" style="font-size:.75rem; text-transform:uppercase; letter-spacing:.15em; color:rgba(27,29,14,.5);">
+      <RouterLink to="/" style="color:inherit; text-decoration:none;">Inicio</RouterLink>
+      <span class="mx-2">/</span>
+      <RouterLink to="/catalogo" style="color:inherit; text-decoration:none;">Catálogo</RouterLink>
+      <span class="mx-2">/</span>
+      <span style="color:#2a0002;">{{ producto.nombre }}</span>
+    </nav>
+
+    <!-- Producto encontrado -->
+    <template v-if="producto.id_producto">
+      <div class="grid">
+
+        <!-- Imagen -->
+        <div class="col-12 lg:col-5">
+          <div class="border-round-lg p-6 sticky top-5 flex flex-column align-items-center justify-content-between"
+               style="background:#f5f5dc; aspect-ratio:3/4; box-shadow:0 20px 40px -10px rgba(27,29,14,.06);">
+            <div class="flex-grow-1 flex align-items-center justify-content-center w-full">
+              <img v-if="producto.imagen_url"
+                   :alt="producto.nombre"
+                   :src="producto.imagen_url"
+                   style="max-width:100%; max-height:100%; object-fit:contain; transition:transform .7s;"
+                   class="product-detail-img" />
+              <i v-else class="pi pi-inbox" style="font-size:6rem; opacity:.2;"></i>
             </div>
-          </div>
 
-          <!-- Right: Content -->
-          <div class="lg:col-span-7 flex flex-col space-y-12">
-            <!-- Header -->
-            <section class="space-y-4">
-              <div class="flex items-center flex-wrap gap-3">
-                <template v-if="producto.categoria">
-                  <span class="bg-tertiary text-on-tertiary px-4 py-1 rounded-full font-label text-[0.75rem] uppercase tracking-widest">
-                    {{ producto.categoria.nombre }}
-                  </span>
-                </template>
-                <template v-if="producto.pais">
-                  <span class="text-on-surface-variant font-label text-[0.75rem] uppercase tracking-widest">
-                    {{ producto.pais }}{{ producto.region ? ', ' + producto.region : '' }}
-                  </span>
-                </template>
-              </div>
-              <h1 class="font-headline text-5xl md:text-6xl font-bold text-primary tracking-tighter leading-tight italic">
-                {{ producto.nombre }}
-              </h1>
-              <template v-if="producto.marca">
-                <p class="font-headline text-2xl text-secondary italic opacity-80">{{ producto.marca.nombre }}</p>
-              </template>
-              <template v-if="producto.variedades && producto.variedades.length > 0">
-                <p class="font-label text-sm text-tertiary uppercase tracking-widest">
-                  {{ producto.variedades.map(v => v.nombre).join(' / ') }}
-                </p>
-              </template>
-            </section>
-
-            <!-- Technical Specs -->
-            <section class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <template v-if="producto.anio_cosecha">
-                <div class="bg-surface-container p-6 rounded-lg flex flex-col justify-center items-center">
-                  <span class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Año de Cosecha</span>
-                  <span class="font-headline text-xl font-bold text-primary">{{ producto.anio_cosecha }}</span>
-                </div>
-              </template>
-              <template v-if="producto.alcohol_porcentaje">
-                <div class="bg-surface-container p-6 rounded-lg flex flex-col justify-center items-center">
-                  <span class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Alcohol</span>
-                  <span class="font-headline text-xl font-bold text-primary">{{ producto.alcohol_porcentaje }}%</span>
-                </div>
-              </template>
-              <template v-if="producto.contenido_ml">
-                <div class="bg-surface-container p-6 rounded-lg flex flex-col justify-center items-center">
-                  <span class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Contenido</span>
-                  <span class="font-headline text-xl font-bold text-primary">{{ producto.contenido_ml }}ml</span>
-                </div>
-              </template>
-              <div class="bg-surface-container p-6 rounded-lg flex flex-col justify-center items-center">
-                <span class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Existencias</span>
-                <span class="font-headline text-xl font-bold text-primary">{{ producto.cantidad }}</span>
-              </div>
-            </section>
-
-            <!-- Pricing & CTA -->
-            <section class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-8 bg-surface-container-highest rounded-xl border border-outline-variant/10">
-              <div class="mb-6 sm:mb-0">
-                <span class="font-label text-[0.75rem] uppercase text-on-surface-variant">Precio de Venta</span>
-                <template v-if="producto.descuento > 0">
-                  <p class="text-lg font-body line-through text-on-surface/40">${{ formatPrice(producto.precio) }}</p>
-                  <p class="text-4xl font-headline font-bold text-primary">
-                    ${{ formatPrice(producto.precio * (1 - producto.descuento / 100)) }}
-                    <span class="text-base text-tertiary font-label ml-2">-{{ producto.descuento }}%</span>
-                  </p>
-                </template>
-                <template v-else>
-                  <p class="text-4xl font-headline font-bold text-primary">${{ formatPrice(producto.precio) }}</p>
-                </template>
-              </div>
-              <template v-if="producto.cantidad > 0">
-                <button @click="agregarAlCarrito(producto.id_producto)"
-                        class="w-full sm:w-auto bg-[#2a0002] text-white px-8 py-4 rounded-md font-label text-sm font-bold uppercase tracking-widest hover:bg-[#3d0003] active:scale-95 transition-all duration-300 flex items-center justify-center space-x-3 shadow-lg">
-                  <span class="material-symbols-outlined">add_shopping_cart</span>
-                  <span>Agregar al Carrito</span>
-                </button>
-              </template>
-              <template v-else>
-                <div class="w-full sm:w-auto bg-stone-100 text-stone-400 px-8 py-4 rounded-md font-label text-sm font-bold uppercase tracking-widest flex items-center justify-center space-x-3 cursor-not-allowed border border-stone-200">
-                  <span class="material-symbols-outlined">block</span>
-                  <span>Producto Agotado</span>
-                </div>
-              </template>
-            </section>
-
-            <!-- Description -->
-            <template v-if="producto.descripcion">
-              <section class="space-y-4">
-                <h3 class="font-headline text-2xl font-bold text-primary italic">Descripción del Vino</h3>
-                <p class="font-body text-on-surface-variant leading-relaxed text-lg">{{ producto.descripcion }}</p>
-              </section>
-            </template>
-
-            <!-- Details Block -->
-            <section class="relative p-12 bg-surface-container-low rounded-lg overflow-hidden">
-              <div class="absolute top-0 right-0 p-8 opacity-10">
-                <span class="material-symbols-outlined text-9xl">wine_bar</span>
-              </div>
-              <div class="relative z-10">
-                <h3 class="font-headline text-2xl font-bold text-primary mb-6">Datos Técnicos</h3>
-                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <template v-if="producto.pais">
-                    <div class="flex items-start gap-3 border-b border-outline-variant/20 pb-3">
-                      <span class="material-symbols-outlined text-tertiary text-sm mt-0.5">public</span>
-                      <div>
-                        <dt class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">País</dt>
-                        <dd class="font-body font-medium text-on-surface">{{ producto.pais }}</dd>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-if="producto.region">
-                    <div class="flex items-start gap-3 border-b border-outline-variant/20 pb-3">
-                      <span class="material-symbols-outlined text-tertiary text-sm mt-0.5">location_on</span>
-                      <div>
-                        <dt class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Región</dt>
-                        <dd class="font-body font-medium text-on-surface">{{ producto.region }}</dd>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-if="producto.marca">
-                    <div class="flex items-start gap-3 border-b border-outline-variant/20 pb-3">
-                      <span class="material-symbols-outlined text-tertiary text-sm mt-0.5">storefront</span>
-                      <div>
-                        <dt class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Bodega</dt>
-                        <dd class="font-body font-medium text-on-surface">{{ producto.marca.nombre }}</dd>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-if="producto.categoria">
-                    <div class="flex items-start gap-3 border-b border-outline-variant/20 pb-3">
-                      <span class="material-symbols-outlined text-tertiary text-sm mt-0.5">category</span>
-                      <div>
-                        <dt class="font-label text-[0.65rem] uppercase tracking-widest text-on-surface-variant">Categoría</dt>
-                        <dd class="font-body font-medium text-on-surface">{{ producto.categoria.nombre }}</dd>
-                      </div>
-                    </div>
-                  </template>
-                </dl>
-              </div>
-            </section>
+            <div class="w-full pt-4 mt-4 flex justify-content-center"
+                 style="border-top:1px solid rgba(218,193,191,.2);">
+              <RouterLink :to="{ name: 'admin.productos.index', query: { search: producto.nombre } }"
+                          style="color:#735c00; text-decoration:none; font-size:.75rem;
+                                 text-transform:uppercase; letter-spacing:.15em; font-weight:700;"
+                          class="flex align-items-center gap-2">
+                <i class="pi pi-pencil"></i>
+                Editar en Admin
+              </RouterLink>
+            </div>
           </div>
         </div>
 
-        <!-- Related Products -->
-        <template v-if="relacionados.length > 0">
-          <section class="bg-surface-container-low py-24 px-6 md:px-12 mt-24">
-            <div class="max-w-screen-2xl mx-auto">
-              <h2 class="font-headline text-4xl text-primary font-bold mb-12 italic">Vinos del Mismo Estilo</h2>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <router-link v-for="rel in relacionados" :key="rel.id_producto" :to="`/producto/${rel.id_producto}`" class="group cursor-pointer block">
-                  <div class="aspect-[3/4] bg-surface-container-low rounded-lg mb-6 overflow-hidden flex items-center justify-center p-6 transition-all duration-500 group-hover:-translate-y-2">
-                    <template v-if="rel.imagen_url">
-                      <img :alt="rel.nombre" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-700" :src="rel.imagen_url"/>
-                    </template>
-                    <template v-else>
-                      <span class="material-symbols-outlined text-7xl text-outline-variant/30">wine_bar</span>
-                    </template>
-                  </div>
-                  <h4 class="font-headline text-xl font-bold text-primary group-hover:text-tertiary transition-colors">{{ rel.nombre }}</h4>
-                  <p class="font-body text-on-surface-variant text-sm">
-                    {{ rel.marca?.nombre || '' }}{{ rel.pais ? ' | ' + rel.pais : '' }}
-                  </p>
-                  <p class="font-label text-tertiary mt-2 font-bold">${{ formatPrice(rel.precio) }}</p>
-                </router-link>
+        <!-- Contenido -->
+        <div class="col-12 lg:col-7 flex flex-column gap-5">
+
+          <!-- Header -->
+          <section>
+            <div class="flex align-items-center flex-wrap gap-2 mb-3">
+              <Tag v-if="producto.categoria"
+                   :value="producto.categoria.nombre"
+                   style="background:#735c00; color:white; font-size:.7rem;
+                          text-transform:uppercase; letter-spacing:.1em;" />
+              <span v-if="producto.pais"
+                    style="color:#544341; font-size:.75rem; text-transform:uppercase; letter-spacing:.15em;">
+                {{ producto.pais }}{{ producto.region ? ', ' + producto.region : '' }}
+              </span>
+            </div>
+
+            <h1 class="product-detail-title">{{ producto.nombre }}</h1>
+
+            <p v-if="producto.marca"
+               style="font-family:'Noto Serif',serif; font-size:1.5rem; color:#745853; font-style:italic; opacity:.8;">
+              {{ producto.marca.nombre }}
+            </p>
+
+            <p v-if="producto.variedades?.length"
+               style="font-size:.875rem; color:#735c00; text-transform:uppercase; letter-spacing:.15em; margin-top:.5rem;">
+              {{ producto.variedades.map(v => v.nombre).join(' / ') }}
+            </p>
+          </section>
+
+          <!-- Specs técnicas -->
+          <section class="grid">
+            <div v-if="producto.anio_cosecha" class="col-6 sm:col-3">
+              <div class="text-center p-4 border-round-lg" style="background:#efefd7;">
+                <p class="spec-label">Año de Cosecha</p>
+                <p class="spec-value">{{ producto.anio_cosecha }}</p>
+              </div>
+            </div>
+            <div v-if="producto.alcohol_porcentaje" class="col-6 sm:col-3">
+              <div class="text-center p-4 border-round-lg" style="background:#efefd7;">
+                <p class="spec-label">Alcohol</p>
+                <p class="spec-value">{{ producto.alcohol_porcentaje }}%</p>
+              </div>
+            </div>
+            <div v-if="producto.contenido_ml" class="col-6 sm:col-3">
+              <div class="text-center p-4 border-round-lg" style="background:#efefd7;">
+                <p class="spec-label">Contenido</p>
+                <p class="spec-value">{{ producto.contenido_ml }}ml</p>
+              </div>
+            </div>
+            <div class="col-6 sm:col-3">
+              <div class="text-center p-4 border-round-lg" style="background:#efefd7;">
+                <p class="spec-label">Existencias</p>
+                <p class="spec-value">{{ producto.cantidad }}</p>
               </div>
             </div>
           </section>
-        </template>
-      </template>
-      <template v-else>
-        <div class="text-center py-16">
-          <span class="material-symbols-outlined text-6xl text-outline-variant/30">wine_bar</span>
-          <p class="text-2xl text-on-surface-variant mt-4">Producto no encontrado</p>
+
+          <!-- Precio y CTA -->
+          <section class="flex flex-column sm:flex-row align-items-start sm:align-items-center
+                          justify-content-between p-5 border-round-xl gap-4"
+                   style="background:#eaead1; border:1px solid rgba(218,193,191,.2);">
+            <div>
+              <span style="font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:#544341;">
+                Precio de Venta
+              </span>
+              <template v-if="producto.descuento > 0">
+                <p class="line-through mt-1" style="color:rgba(0,0,0,.4); font-size:1rem;">
+                  ${{ formatPrice(producto.precio) }}
+                </p>
+                <p class="price-main">
+                  ${{ formatPrice(producto.precio * (1 - producto.descuento / 100)) }}
+                  <span style="font-size:1rem; color:#735c00; margin-left:.5rem;">
+                    -{{ producto.descuento }}%
+                  </span>
+                </p>
+              </template>
+              <p v-else class="price-main">${{ formatPrice(producto.precio) }}</p>
+            </div>
+
+            <Button v-if="producto.cantidad > 0"
+                    label="Agregar al Carrito"
+                    icon="pi pi-cart-plus"
+                    style="background:#2a0002; border-color:#2a0002; color:white;
+                           text-transform:uppercase; letter-spacing:.15em;
+                           font-size:.8rem; font-weight:700; padding:1rem 2rem;"
+                    @click="agregarAlCarrito(producto.id_producto)" />
+
+            <div v-else
+                 class="flex align-items-center gap-2 px-5 py-3 border-round-md"
+                 style="background:#f0f0f0; color:#aaa; cursor:not-allowed;
+                        font-size:.8rem; text-transform:uppercase; letter-spacing:.15em; font-weight:700;">
+              <i class="pi pi-ban"></i>
+              Producto Agotado
+            </div>
+          </section>
+
+          <!-- Descripción -->
+          <section v-if="producto.descripcion">
+            <h3 class="section-heading">Descripción del Vino</h3>
+            <p style="color:#544341; line-height:1.8; font-size:1.1rem;">{{ producto.descripcion }}</p>
+          </section>
+
+          <!-- Datos técnicos -->
+          <section class="p-5 border-round-lg relative overflow-hidden" style="background:#f5f5dc;">
+            <i class="pi pi-star absolute"
+               style="font-size:8rem; opacity:.06; top:0; right:1rem;"></i>
+            <h3 class="section-heading">Datos Técnicos</h3>
+            <dl class="grid">
+              <div v-if="producto.pais" class="col-12 sm:col-6 mb-3">
+                <div class="flex align-items-start gap-3 pb-3"
+                     style="border-bottom:1px solid rgba(218,193,191,.2);">
+                  <i class="pi pi-globe mt-1" style="color:#735c00;"></i>
+                  <div>
+                    <dt class="spec-label">País</dt>
+                    <dd style="font-weight:500; color:#1b1d0e;">{{ producto.pais }}</dd>
+                  </div>
+                </div>
+              </div>
+              <div v-if="producto.region" class="col-12 sm:col-6 mb-3">
+                <div class="flex align-items-start gap-3 pb-3"
+                     style="border-bottom:1px solid rgba(218,193,191,.2);">
+                  <i class="pi pi-map-marker mt-1" style="color:#735c00;"></i>
+                  <div>
+                    <dt class="spec-label">Región</dt>
+                    <dd style="font-weight:500; color:#1b1d0e;">{{ producto.region }}</dd>
+                  </div>
+                </div>
+              </div>
+              <div v-if="producto.marca" class="col-12 sm:col-6 mb-3">
+                <div class="flex align-items-start gap-3 pb-3"
+                     style="border-bottom:1px solid rgba(218,193,191,.2);">
+                  <i class="pi pi-building mt-1" style="color:#735c00;"></i>
+                  <div>
+                    <dt class="spec-label">Bodega</dt>
+                    <dd style="font-weight:500; color:#1b1d0e;">{{ producto.marca.nombre }}</dd>
+                  </div>
+                </div>
+              </div>
+              <div v-if="producto.categoria" class="col-12 sm:col-6 mb-3">
+                <div class="flex align-items-start gap-3 pb-3"
+                     style="border-bottom:1px solid rgba(218,193,191,.2);">
+                  <i class="pi pi-tag mt-1" style="color:#735c00;"></i>
+                  <div>
+                    <dt class="spec-label">Categoría</dt>
+                    <dd style="font-weight:500; color:#1b1d0e;">{{ producto.categoria.nombre }}</dd>
+                  </div>
+                </div>
+              </div>
+            </dl>
+          </section>
+
         </div>
-      </template>
+      </div>
+
+      <!-- Relacionados -->
+      <section v-if="relacionados.length" class="mt-8 py-6 px-4 border-round-lg" style="background:#f5f5dc;">
+        <h2 class="section-heading mb-5">Vinos del Mismo Estilo</h2>
+        <div class="grid">
+          <div v-for="rel in relacionados" :key="rel.id_producto" class="col-12 md:col-4">
+            <RouterLink :to="`/catalogo/${rel.id_producto}`" class="no-underline block related-card">
+              <div class="flex align-items-center justify-content-center p-5 border-round-lg mb-3"
+                   style="aspect-ratio:3/4; background:rgb(245, 245, 220);;">
+                <img v-if="rel.imagen_url"
+                     :alt="rel.nombre" :src="rel.imagen_url"
+                     style="max-width:100%; max-height:100%; object-fit:contain;
+                            transition:transform .7s;" class="related-img" />
+                <i v-else class="pi pi-inbox" style="font-size:4rem; opacity:.2;"></i>
+              </div>
+              <h4 style="font-family:'Noto Serif',serif; font-size:1.2rem;
+                         color:#2a0002; font-weight:700; transition:color .2s;">
+                {{ rel.nombre }}
+              </h4>
+              <p style="font-size:.875rem; color:#544341; margin-top:.25rem;">
+                {{ rel.marca?.nombre || '' }}{{ rel.pais ? ' | ' + rel.pais : '' }}
+              </p>
+              <p style="color:#735c00; font-weight:700; margin-top:.5rem;">
+                ${{ formatPrice(rel.precio) }}
+              </p>
+            </RouterLink>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <!-- No encontrado -->
+    <template v-else>
+      <div class="text-center py-8">
+        <i class="pi pi-inbox" style="font-size:5rem; opacity:.15; display:block; margin-bottom:1rem;"></i>
+        <p style="font-size:1.5rem; color:rgba(42,0,2,.5); font-style:italic;">Producto no encontrado</p>
+      </div>
+    </template>
+
   </main>
 </template>
 
@@ -222,10 +242,10 @@ import { ProductoController } from '@/controllers'
 import { useCartStore } from '@/stores/cart'
 import { useNotificationStore } from '@/stores/notifications'
 
-const route = useRoute()
-const cart = useCartStore()
-const notif = useNotificationStore()
-const producto = ref({})
+const route      = useRoute()
+const cart       = useCartStore()
+const notif      = useNotificationStore()
+const producto   = ref({})
 const relacionados = ref([])
 
 const formatPrice = (price) => parseFloat(price).toFixed(2)
@@ -235,15 +255,12 @@ function agregarAlCarrito(idProducto) {
     const p = producto.value
     const result = cart.addItem(idProducto, {
       nombre: p.nombre,
-      precio: p.descuento > 0
-        ? p.precio * (1 - p.descuento / 100)
-        : p.precio,
+      precio: p.descuento > 0 ? p.precio * (1 - p.descuento / 100) : p.precio,
       imagen: p.imagen_url,
     })
     notif.show(result.mensaje || 'Producto agregado al carrito', 'success')
     window.dispatchEvent(new Event('cart-updated'))
   } catch (err) {
-    console.error('Error al agregar al carrito:', err)
     notif.show('Error al agregar al carrito', 'error')
   }
 }
@@ -252,21 +269,16 @@ onMounted(async () => {
   try {
     const id = route.params.id
     const result = await ProductoController.obtenerProductoPorId(id)
-
-    if (!result.success) {
-      throw new Error(result.message)
-    }
-
+    if (!result.success) throw new Error(result.message)
     producto.value = result.producto
 
     if (result.producto.id_categoria) {
-      const relatedResult = await ProductoController.obtenerProductos({
+      const rel = await ProductoController.obtenerProductos({
         id_categoria: result.producto.id_categoria,
         per_page: 4,
       })
-
-      relacionados.value = (relatedResult.productos ?? [])
-        .filter((item) => item.id_producto !== result.producto.id_producto)
+      relacionados.value = (rel.productos ?? [])
+        .filter(i => i.id_producto !== result.producto.id_producto)
         .slice(0, 3)
     }
   } catch (error) {
@@ -274,3 +286,55 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.page-container { max-width: 1400px; margin-inline: auto; padding-inline: 1.5rem; }
+
+.product-detail-img:hover { transform: scale(1.05); }
+
+.product-detail-title {
+  font-family: 'Noto Serif', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  font-style: italic;
+  color: #2a0002;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin: .5rem 0;
+}
+
+.spec-label {
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: #544341;
+  margin-bottom: .25rem;
+}
+
+.spec-value {
+  font-family: 'Noto Serif', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2a0002;
+}
+
+.price-main {
+  font-family: 'Noto Serif', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2a0002;
+  margin-top: .25rem;
+}
+
+.section-heading {
+  font-family: 'Noto Serif', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-style: italic;
+  color: #2a0002;
+  margin-bottom: 1rem;
+}
+
+.related-card:hover h4 { color: #735c00; }
+.related-img:hover { transform: scale(1.05); }
+</style>

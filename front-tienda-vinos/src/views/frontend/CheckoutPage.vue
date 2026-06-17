@@ -94,7 +94,7 @@
           :icon="procesando ? 'pi pi-spin pi-spinner' : 'pi pi-credit-card'"
           :disabled="procesando"
           class="w-full"
-          style="max-width:28rem; background:#2a0002; border-color:#2a0002;
+          style="max-width:28rem; background:#2a0002; border-color:#2a0002; color:white;
                  font-weight:700; letter-spacing:.2em; text-transform:uppercase;
                  padding:1.25rem;"
           @click="confirmarPago"
