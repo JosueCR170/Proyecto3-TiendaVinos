@@ -10,7 +10,7 @@
           <router-link :to="{ name: 'admin.variedades.index' }" custom v-slot="{ navigate }">
             <Button label="Descartar" severity="secondary" outlined @click="navigate" />
           </router-link>
-          <Button type="submit" label="Guardar Variedad" icon="pi pi-save" :loading="loading" />
+          <Button type="submit" label="Guardar Variedad" :loading="loading" style="background-color: var(--primary);border: none;"/>
         </div>
       </header>
 
@@ -18,35 +18,30 @@
 
       <div class="grid">
         <div class="col-12 lg:col-8">
-          <Card class="admin-card mb-4">
+          <Card class="admin-card mb-4 bg-transparent">
             <template #title>Perfil de la Variedad</template>
             <template #content>
               <div class="grid formgrid">
                 <div class="field col-12 md:col-6">
                   <label for="nombre" class="admin-label">Nombre de la Variedad</label>
-                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Cabernet Sauvignon" required />
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Cabernet Sauvignon" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="tipo" class="admin-label">Tipo de Uva</label>
-                  <Select v-model="form.tipo" id="tipo" :options="tipoOptions" optionLabel="label" optionValue="value" class="w-full" placeholder="Seleccionar..." required />
+                  <Select v-model="form.tipo" id="tipo" :options="tipoOptions" optionLabel="label" optionValue="value" class="w-full" placeholder="Seleccionar..." required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
               </div>
             </template>
           </Card>
 
-          <Card class="admin-card">
+          <Card class="admin-card bg-transparent">
             <template #title>Notas de Cepa</template>
             <template #content>
-              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Describe las caracteristicas tipicas, aromas y sabores de esta variedad..." />
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Describe las caracteristicas tipicas, aromas y sabores de esta variedad..." style="border: none;background-color: var(--surface-container-low);border-radius: 12px;"/>
             </template>
           </Card>
         </div>
 
-        <div class="col-12 lg:col-4">
-          <Message severity="info" :closable="false">
-            Cada variedad aporta una estructura unica al vino. Describe su perfil aromatico para guiar la cata.
-          </Message>
-        </div>
       </div>
     </form>
   </div>

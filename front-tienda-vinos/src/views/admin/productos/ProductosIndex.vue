@@ -20,13 +20,13 @@
             </IconField>
           </div>
           <div class="field col-12 md:col-6 lg:col-3">
-            <Select v-model="filters.categoria" :options="categoriaOptions" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Todas las categorias" />
+            <Select v-model="filters.categoria" :options="categoriaOptions" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Todas las categorías" />
           </div>
           <div class="field col-12 md:col-6 lg:col-3">
             <Select v-model="filters.marca" :options="marcaOptions" optionLabel="nombre" optionValue="id_marca" class="w-full" placeholder="Todas las marcas" />
           </div>
           <div class="field col-12 md:col-6 lg:col-3">
-            <Select v-model="filters.pais" :options="paisOptions" class="w-full" placeholder="Todos los paises" filter />
+            <Select v-model="filters.pais" :options="paisOptions" class="w-full" placeholder="Todos los países" filter />
           </div>
         </div>
         <div class="flex flex-wrap gap-2 justify-content-end">
@@ -67,7 +67,7 @@
       <Column>
         <template #header>
           <div class="flex align-items-center gap-1">
-            <Button label="Categoria" :icon="sortPrimeIcon('categoria')" severity="secondary" text @click="toggleSort('categoria')" />
+            <Button label="Categoría" :icon="sortPrimeIcon('categoria')" severity="secondary" text @click="toggleSort('categoria')" />
             <Button label="Marca" :icon="sortPrimeIcon('marca')" severity="secondary" text @click="toggleSort('marca')" />
           </div>
         </template>

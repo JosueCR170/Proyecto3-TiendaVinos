@@ -15,11 +15,11 @@
         <div class="flex flex-column md:flex-row gap-3 md:align-items-center">
           <IconField class="flex-1">
             <InputIcon class="pi pi-search" />
-            <InputText v-model="searchQuery" class="w-full" placeholder="Buscar por nombre o descripcion..." />
+            <InputText v-model="searchQuery" class="w-full" placeholder="Buscar por nombre o descripción..." />
           </IconField>
           <IconField class="flex-1">
             <InputIcon class="pi pi-globe" />
-            <InputText v-model="searchPais" class="w-full" placeholder="Buscar por pais..." />
+            <InputText v-model="searchPais" class="w-full" placeholder="Buscar por país..." />
           </IconField>
           <Button v-if="searchQuery || searchPais" label="Limpiar filtros" icon="pi pi-filter-slash" severity="secondary" outlined @click="clearFilters" />
         </div>

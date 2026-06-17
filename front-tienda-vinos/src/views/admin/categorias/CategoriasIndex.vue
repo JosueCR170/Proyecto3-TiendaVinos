@@ -15,7 +15,7 @@
         <div class="flex flex-column md:flex-row gap-3 md:align-items-center">
           <IconField class="flex-1">
             <InputIcon class="pi pi-search" />
-            <InputText v-model="searchQuery" class="w-full" placeholder="Buscar categorias..." />
+            <InputText v-model="searchQuery" class="w-full" placeholder="Buscar categorías..." />
           </IconField>
           <Button v-if="searchQuery" label="Limpiar filtros" icon="pi pi-filter-slash" severity="secondary" outlined @click="clearSearch" />
         </div>
@@ -25,9 +25,9 @@
     <Message v-if="error" severity="error" class="mb-4">{{ error }}</Message>
 
     <DataTable v-else :value="displayCategorias" :loading="loading" dataKey="id_categoria" class="admin-table" stripedRows>
-      <template #empty>No se encontraron categorias.</template>
+      <template #empty>No se encontraron categorías.</template>
 
-      <Column header="Estructura de Categoria">
+      <Column header="Estructura de Categoría">
         <template #body="{ data: cat }">
           <div class="flex align-items-center gap-3" :style="{ paddingLeft: cat.nivel > 1 ? '2rem' : '0' }">
             <i :class="cat.nivel === 1 ? 'pi pi-folder' : 'pi pi-angle-right text-500'"></i>
@@ -61,9 +61,9 @@
       </Column>
     </DataTable>
 
-    <Dialog v-model:visible="deleteModal.visible" modal header="Eliminar Categoria" :style="{ width: '32rem' }">
-      <p class="mb-3">Estas a punto de eliminar <strong>{{ deleteModal.categoria?.nombre }}</strong>. Esta accion es irreversible.</p>
-      <Message severity="warn">Si la categoria esta en uso por productos, la eliminacion fallara.</Message>
+    <Dialog v-model:visible="deleteModal.visible" modal header="Eliminar Categoría" :style="{ width: '32rem' }">
+      <p class="mb-3">Estás a punto de eliminar <strong>{{ deleteModal.categoria?.nombre }}</strong>. Esta acción es irreversible.</p>
+      <Message severity="warn">Si la categoría esta en uso por productos, la eliminación fallará.</Message>
       <template #footer>
         <Button label="Cancelar" severity="secondary" outlined :disabled="deleteModal.loading" @click="closeDeleteModal" />
         <Button label="Eliminar Permanentemente" severity="danger" :loading="deleteModal.loading" @click="confirmDelete" />
@@ -136,7 +136,7 @@ async function fetchCategorias() {
 
     categorias.value = result.categorias
   } catch (err) {
-    error.value = 'Error al cargar las categorias.'
+    error.value = 'Error al cargar las categorías.'
     console.error(err)
   } finally {
     loading.value = false
@@ -159,13 +159,13 @@ async function confirmDelete() {
   try {
     const result = await CategoriaController.eliminarCategoria(deleteModal.value.categoria.id_categoria)
     if (!result.success) throw new Error(result.message)
-    notif.show('Categoria eliminada con exito.', 'success')
+    notif.show('Categoría eliminada con éxito.', 'success')
     deleteModal.value.loading = false
     closeDeleteModal()
     await fetchCategorias()
   } catch (err) {
     deleteModal.value.loading = false
-    const msg = err.message || 'Error al eliminar la categoria.'
+    const msg = err.message || 'Error al eliminar la categoría.'
     notif.show(msg, 'error')
   }
 }

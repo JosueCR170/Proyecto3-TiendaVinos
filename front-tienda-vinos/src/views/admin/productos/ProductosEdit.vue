@@ -8,13 +8,13 @@
       <header class="header-section">
         <div class="header-text">
           <h1>Editar Registro de Vino</h1>
-          <p>Actualiza la narrativa y especificaciones tecnicas de esta pieza de la coleccion.</p>
+          <p>Actualiza la narrativa y especificaciones técnicas de esta pieza de la colección.</p>
         </div>
         <div class="header-actions">
           <router-link :to="{ name: 'admin.productos.index' }" custom v-slot="{ navigate }">
             <Button label="Descartar Cambios" severity="secondary" outlined @click="navigate" />
           </router-link>
-          <Button type="submit" label="Actualizar Cava" icon="pi pi-save" :loading="loadingSubmit" />
+          <Button type="submit" label="Actualizar Cava" :loading="loadingSubmit" style="background-color: var(--primary);border: none;"/>
         </div>
       </header>
 
@@ -22,40 +22,40 @@
 
       <div class="grid">
         <div class="col-12 xl:col-8">
-          <Card class="admin-card mb-4">
-            <template #title>Informacion Basica</template>
+          <Card class="admin-card mb-4 bg-transparent">
+            <template #title>Información Básica</template>
             <template #content>
               <div class="grid formgrid">
                 <div class="field col-12 md:col-6">
                   <label for="nombre" class="admin-label">Nombre del Vino</label>
-                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Chateau Margaux" required />
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Chateau Margaux" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="anio_cosecha" class="admin-label">Cosecha (Vintage)</label>
                   <InputNumber v-model="form.anio_cosecha" inputId="anio_cosecha" class="w-full" :useGrouping="false" placeholder="2018" />
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="pais" class="admin-label">Pais de Origen</label>
-                  <Select v-model="form.pais" id="pais" :options="paisOptions" class="w-full" placeholder="Seleccionar pais..." filter required />
+                  <label for="pais" class="admin-label">País de Origen</label>
+                  <Select v-model="form.pais" id="pais" :options="paisOptions" class="w-full" placeholder="Seleccionar país..." filter required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="region" class="admin-label">Region / Terroir</label>
-                  <InputText v-model="form.region" id="region" class="w-full" placeholder="Bordeaux" />
+                  <label for="region" class="admin-label">Región / Terroir</label>
+                  <InputText v-model="form.region" id="region" class="w-full" placeholder="Bordeaux" style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="id_categoria" class="admin-label">Categoria Editorial</label>
-                  <Select v-model="form.id_categoria" id="id_categoria" :options="categorias" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccionar..." required />
+                  <label for="id_categoria" class="admin-label">Categoría Editorial</label>
+                  <Select v-model="form.id_categoria" id="id_categoria" :options="categorias" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccionar..." required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12 md:col-6">
                   <label for="id_marca" class="admin-label">Casa / Bodega</label>
-                  <Select v-model="form.id_marca" id="id_marca" :options="marcas" optionLabel="nombre" optionValue="id_marca" class="w-full" placeholder="Seleccionar..." required />
+                  <Select v-model="form.id_marca" id="id_marca" :options="marcas" optionLabel="nombre" optionValue="id_marca" class="w-full" placeholder="Seleccionar..." required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
               </div>
             </template>
           </Card>
 
-          <Card class="admin-card mb-4">
-            <template #title>Detalles Tecnicos</template>
+          <Card class="admin-card mb-4 bg-transparent">
+            <template #title>Detalles Técnicos</template>
             <template #content>
               <div class="grid formgrid">
                 <div class="field col-12 md:col-4">
@@ -77,15 +77,15 @@
             </template>
           </Card>
 
-          <Card class="admin-card mb-4">
+          <Card class="admin-card mb-4 bg-transparent">
             <template #title>Nota del Sommelier</template>
             <template #content>
-              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Describe el caracter, bouquet y final de esta cosecha..." />
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Describe el carácter, bouquet y final de esta cosecha..." style="border: none;background-color: var(--surface-container-low);border-radius: 12px;"/>
             </template>
           </Card>
 
-          <Card class="admin-card">
-            <template #title>Valoracion y Stock</template>
+          <Card class="admin-card bg-transparent">
+            <template #title>Valoración y Stock</template>
             <template #content>
               <div class="grid formgrid">
                 <div class="field col-12 md:col-4">
@@ -106,16 +106,16 @@
         </div>
 
         <div class="col-12 xl:col-4">
-          <Card class="admin-card mb-4">
+          <Card class="admin-card mb-4 bg-transparent">
             <template #title>Identidad Visual</template>
             <template #content>
               <div class="admin-upload" :class="{ 'has-image': form.imagen_url }" @click="fileInput?.click()">
                 <img v-if="form.imagen_url" :src="form.imagen_url" alt="Preview">
                 <div v-else class="flex flex-column align-items-center gap-3 text-center">
-                  <i class="pi pi-image text-4xl text-primary"></i>
+                  <i class="pi pi-image text-4xl"></i>
                   <div>
-                    <h3 class="m-0 text-primary">Estetica de la Botella</h3>
-                    <p class="mt-2 mb-0 text-sm text-600">Actualiza la fotografia de la etiqueta.</p>
+                    <h3 class="m-0">Estetica de la Botella</h3>
+                    <p class="mt-2 mb-0 text-sm text-600">Actualiza la fotografía de la etiqueta.</p>
                   </div>
                 </div>
               </div>
@@ -126,14 +126,12 @@
 
               <div class="field mt-4">
                 <label for="imagen_url" class="admin-label">URL de la Imagen Editorial</label>
-                <InputText v-model="form.imagen_url" id="imagen_url" class="w-full" placeholder="https://ejemplo.com/imagen.jpg" />
+                <InputText v-model="form.imagen_url" id="imagen_url" class="w-full" placeholder="https://ejemplo.com/imagen.jpg" style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
               </div>
             </template>
           </Card>
 
-          <Message severity="info" :closable="false">
-            Asegurate de que el stock refleje el inventario fisico real para evitar discrepancias en la bodega digital.
-          </Message>
+     
         </div>
       </div>
     </form>
@@ -268,9 +266,9 @@ async function submitForm() {
     router.push({ name: 'admin.productos.index' })
   } catch (err) {
     if (err.status === 422) {
-      error.value = err.message || 'Error de validacion. Revisa los campos.'
+      error.value = err.message || 'Error de validación. Revisa los campos.'
     } else {
-      error.value = 'Ocurrio un error inesperado al actualizar el producto.'
+      error.value = 'Ocurrió un error inesperado al actualizar el producto.'
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } finally {

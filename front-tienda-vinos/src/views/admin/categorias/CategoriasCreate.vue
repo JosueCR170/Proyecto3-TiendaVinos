@@ -3,14 +3,14 @@
     <form @submit.prevent="submitForm">
       <header class="header-section">
         <div class="header-text">
-          <h1>Nueva Categoria Editorial</h1>
-          <p>Define una nueva rama en la estructura jerarquica de la coleccion.</p>
+          <h1>Nueva Categoría Editorial</h1>
+          <p>Define una nueva rama en la estructura jerárquica de la colección.</p>
         </div>
         <div class="header-actions">
           <router-link :to="{ name: 'admin.categorias.index' }" custom v-slot="{ navigate }">
             <Button label="Descartar" severity="secondary" outlined @click="navigate" />
           </router-link>
-          <Button type="submit" label="Guardar Categoria" icon="pi pi-save" :loading="loading" />
+          <Button type="submit" label="Guardar Categoría" :loading="loading" style="background-color: var(--primary);border: none;"/>
         </div>
       </header>
 
@@ -18,40 +18,35 @@
 
       <div class="grid">
         <div class="col-12 lg:col-8">
-          <Card class="admin-card mb-4">
-            <template #title>Identidad de la Categoria</template>
+          <Card class="admin-card mb-4 bg-transparent">
+            <template #title>Identidad de la Categoría</template>
             <template #content>
               <div class="grid formgrid">
                 <div class="field col-12 md:col-6">
-                  <label for="nombre" class="admin-label">Nombre de la Categoria</label>
-                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Tintos de Guarda" required />
+                  <label for="nombre" class="admin-label">Nombre de la Categoría</label>
+                  <InputText v-model="form.nombre" id="nombre" class="w-full" placeholder="ej. Tintos de Guarda" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12 md:col-6">
-                  <label for="nivel_display" class="admin-label">Nivel Jerarquico</label>
-                  <Select v-model="form.nivel" id="nivel_display" :options="nivelOptions" optionLabel="label" optionValue="value" class="w-full" disabled />
+                  <label for="nivel_display" class="admin-label">Nivel Jerárquico</label>
+                  <Select v-model="form.nivel" id="nivel_display" :options="nivelOptions" optionLabel="label" optionValue="value" class="w-full" disabled style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
                 <div class="field col-12">
-                  <label for="nombre_padre" class="admin-label">Categoria Padre</label>
-                  <InputText v-if="form.nivel === 1" modelValue="Ninguna (Raiz)" class="w-full" disabled />
-                  <Select v-else v-model="form.nombre_padre" id="nombre_padre" :options="categoriasPrincipales" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccione una categoria superior" required />
+                  <label for="nombre_padre" class="admin-label">Categoría Padre</label>
+                  <InputText v-if="form.nivel === 1" modelValue="Ninguna (Raiz)" class="w-full" disabled style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
+                  <Select v-else v-model="form.nombre_padre" id="nombre_padre" :options="categoriasPrincipales" optionLabel="nombre" optionValue="id_categoria" class="w-full" placeholder="Seleccione una categoria superior" required style="border: none;border-bottom: 1px solid var(--outline-variant);background: transparent;border-radius: 0;"/>
                 </div>
               </div>
             </template>
           </Card>
 
-          <Card class="admin-card">
-            <template #title>Descripcion Editorial</template>
+          <Card class="admin-card bg-transparent">
+            <template #title>Descripción Editorial</template>
             <template #content>
-              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Define el proposito y caracter de esta categoria..." />
+              <Textarea v-model="form.descripcion" id="descripcion" rows="7" class="w-full" autoResize placeholder="Define el propósito y carácter de esta categoría..." style="border: none;background-color: var(--surface-container-low);border-radius: 12px;"/>
             </template>
           </Card>
         </div>
 
-        <div class="col-12 lg:col-4">
-          <Message severity="info" :closable="false">
-            Una buena categorizacion permite navegar la cava con mayor fluidez. Usa nombres concisos y descriptivos.
-          </Message>
-        </div>
       </div>
     </form>
   </div>

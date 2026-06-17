@@ -1267,3 +1267,10 @@ input:checked + .slider:before { transform: translateX(20px); }
 .pagination-controls .p-button:disabled {
     opacity: 0.4;
 }
+
+.p-inputnumber-input {
+    border: none !important;
+    border-bottom: 1px solid var(--outline-variant) !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
