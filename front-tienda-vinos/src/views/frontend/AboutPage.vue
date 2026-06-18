@@ -143,7 +143,7 @@
           </div>
 
           <router-link to="/catalogo">
-            <Button label="Ver Productos" icon="pi pi-arrow-right" iconPos="right" class="btn-primary" />
+            <Button label="Ver Productos" icon="pi pi-arrow-right" iconPos="right" class="btn-primary " style="background-color: var(--primary);border: none;"/>
           </router-link>
         </div>
 
